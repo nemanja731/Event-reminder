@@ -9,20 +9,28 @@ import (
 )
 
 type User struct {
-	id       int
+	id       int32
 	username string
 	password string
 }
 
-type Person struct {
-	id      int
-	name    string
-	address string
-}
-
 var client *mongo.Client
 
-func formHandler(w http.ResponseWriter, r *http.Request) {
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "ParseForm() err: %v", err)
+		return
+	}
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+	doc := User{id: 1, username: username, password: password}
+
+	user := GetOne(doc, client)
+	fmt.Println(user)
+}
+
+func signinHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
@@ -36,7 +44,6 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	if err := InsertOne(doc, client); err != nil {
 		fmt.Println(err.Error())
 	}
-
 }
 
 func main() {
@@ -49,9 +56,11 @@ func main() {
 	defer Disconnect(client)
 
 	// define static server
-	fileServer := http.FileServer(http.Dir("../static"))
+	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
-	http.HandleFunc("/form", formHandler)
+	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/signin", signinHandler)
+
 	fmt.Printf("Starting server at port 8080\n")
 
 	// Listen and serve port 8080

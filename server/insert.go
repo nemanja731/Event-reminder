@@ -11,7 +11,6 @@ import (
 func InsertOne(obj User, client *mongo.Client) error {
 	coll := client.Database("simple_app").Collection("user")
 
-	// fmt.Println(obj)
 	result, err := coll.InsertOne(context.TODO(), bson.D{
 		{Key: "id", Value: obj.id},
 		{Key: "Username", Value: obj.username},
