@@ -8,6 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type User struct {
+	id       int
+	username string
+	password string
+}
+
 type Person struct {
 	id      int
 	name    string
@@ -22,10 +28,10 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	name := r.FormValue("name")
-	address := r.FormValue("address")
+	username := r.FormValue("username")
+	password := r.FormValue("password")
 
-	doc := Person{id: 1, name: name, address: address}
+	doc := User{id: 1, username: username, password: password}
 
 	if err := InsertOne(doc, client); err != nil {
 		fmt.Println(err.Error())

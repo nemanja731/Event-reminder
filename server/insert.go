@@ -4,17 +4,21 @@ import (
 	"context"
 	"fmt"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//URI:= mongodb+srv://markomacura9:<password>@cluster0.ubx2tri.mongodb.net/?retryWrites=true&w=majority
+func InsertOne(obj User, client *mongo.Client) error {
+	coll := client.Database("simple_app").Collection("user")
 
-func InsertOne(obj interface{}, client *mongo.Client) error {
-	coll := client.Database("simple_app").Collection("person")
-
-	result, err := coll.InsertOne(context.TODO(), obj)
+	// fmt.Println(obj)
+	result, err := coll.InsertOne(context.TODO(), bson.D{
+		{Key: "id", Value: obj.id},
+		{Key: "Username", Value: obj.username},
+		{Key: "Password", Value: obj.password},
+	})
 	if err == nil {
-		fmt.Println("Inserted document with _id: %v\n", result.InsertedID)
+		fmt.Println("Inserted document with _id: %v\n", result)
 	}
 	return err
 }
