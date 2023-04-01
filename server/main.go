@@ -27,10 +27,16 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	doc := User{id: 1, username: username, password: password}
 
 	user := GetOne(doc, client)
-	fmt.Println(user)
+	isSame := checkCredentials(user, doc)
+
+	if isSame {
+		fmt.Fprintf(w, "True")
+	} else {
+		fmt.Fprintf(w, "False")
+	}
 }
 
-func signinHandler(w http.ResponseWriter, r *http.Request) {
+func signInHandler(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %v", err)
 		return
@@ -59,7 +65,7 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fileServer)
 	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/signin", signinHandler)
+	http.HandleFunc("/signin", signInHandler)
 
 	fmt.Printf("Starting server at port 8080\n")
 

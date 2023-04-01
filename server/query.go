@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,17 +12,19 @@ func GetOne(obj User, client *mongo.Client) User {
 	ctx := context.Background()
 
 	filter := bson.M{"Username": obj.username}
-	// fmt.Println(obj)
-	// fmt.Println(filter)
+
 	var user bson.M
 	if err := coll.FindOne(ctx, filter).Decode(&user); err != nil {
-		log.Fatal(err)
+		user = nil
 	}
+	usr := User{}
 
-	usr := User{
-		username: user["Username"].(string),
-		password: user["Password"].(string),
-		id:       user["id"].(int32),
+	if user != nil {
+		usr = User{
+			username: user["Username"].(string),
+			password: user["Password"].(string),
+			id:       user["id"].(int32),
+		}
 	}
 	return usr
 }
