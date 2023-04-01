@@ -61,9 +61,7 @@ func main() {
 
 	defer Disconnect(client)
 
-	// define static server
-	fileServer := http.FileServer(http.Dir("./static"))
-	http.Handle("/", fileServer)
+	// define handle functions
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/signin", signInHandler)
 
