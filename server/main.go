@@ -1,75 +1,52 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/gorilla/mux"
+	"github.com/mmacura9/event-reminder/database"
+	"github.com/mmacura9/event-reminder/handlers"
 )
 
-type User struct {
-	id       int32
-	username string
-	password string
-}
-
-var client *mongo.Client
-
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
-	}
-
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-	doc := User{id: 1, username: username, password: password}
-
-	user := GetOne(doc, client)
-	isSame := checkCredentials(user, doc)
-
-	if isSame {
-		fmt.Fprintf(w, "True")
-	} else {
-		fmt.Fprintf(w, "False")
-	}
-}
-
-func signInHandler(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
-	}
-
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-
-	doc := User{id: 1, username: username, password: password}
-
-	if err := InsertOne(doc, client); err != nil {
-		fmt.Println(err.Error())
-	}
-}
-
 func main() {
-	// link for the mongoDB
-	uri := getUri()
+	client := database.Connect()
+	defer database.Disconnect(client)
 
-	// connect to the mongoDB
-	client = Connect(uri)
+	l := log.New(os.Stdout, "event-api", log.LstdFlags)
 
-	defer Disconnect(client)
+	users := handlers.NewUsers(l, client)
+	sm := mux.NewRouter()
 
-	// define handle functions
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/signin", signInHandler)
+	post := sm.Methods(http.MethodPost).Subrouter()
+	post.HandleFunc("/new-user", users.AddUser)
 
-	fmt.Printf("Starting server at port 8080\n")
-
-	// Listen and serve port 8080
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
+	server := &http.Server{
+		Addr:         ":9090",
+		Handler:      sm,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
 	}
+
+	go func() {
+		err := server.ListenAndServe()
+		if err != nil {
+			l.Fatal(err)
+		}
+	}()
+
+	sigChan := make(chan os.Signal)
+	signal.Notify(sigChan, os.Interrupt, os.Kill)
+
+	sig := <-sigChan
+	l.Println("Received terminate, graceful shutdown", sig)
+
+	tc, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	server.Shutdown(tc)
 
 }
