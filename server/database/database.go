@@ -12,7 +12,7 @@ import (
 )
 
 type User struct {
-	id       int
+	id       int // Will be updated, so it will be auto-increment
 	username string
 	password string
 }
