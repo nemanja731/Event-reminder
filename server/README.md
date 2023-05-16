@@ -1,8 +1,7 @@
 # Server
 
 ## External sources
-
-We use gorilla web toolkit. The installation is on the following link https://www.gorillatoolkit.org/.
+We use [gorilla web toolkit](https://www.gorillatoolkit.org/).
 
 ## Starting the server
 
