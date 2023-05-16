@@ -31,3 +31,8 @@ Additionally to use this API you should provide the credentials of the user in j
     "password":<string>
 }
 ```
+
+GET request can be done on link:
+```
+localhost:9090/get-users
+```
