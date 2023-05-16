@@ -14,16 +14,19 @@ import (
 )
 
 func main() {
-	client := database.Connect()
-	defer database.Disconnect(client)
+	db := database.Connect()
+	defer database.Disconnect(db)
 
 	l := log.New(os.Stdout, "event-api", log.LstdFlags)
 
-	users := handlers.NewUsers(l, client)
+	users := handlers.NewUsers(l, db)
 	sm := mux.NewRouter()
 
 	post := sm.Methods(http.MethodPost).Subrouter()
 	post.HandleFunc("/new-user", users.AddUser)
+
+	get := sm.Methods(http.MethodGet).Subrouter()
+	get.HandleFunc("/get-users", users.GetUsers)
 
 	server := &http.Server{
 		Addr:         ":9090",

@@ -1,76 +1,93 @@
 package database
 
 import (
-	"context"
+	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type User struct {
-	id       int // Will be updated, so it will be auto-increment
-	username string
-	password string
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"-"`
 }
 
-func Connect() *mongo.Client {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(getUri()))
+func (u User) GetId() int {
+	return u.Id
+}
+
+func (u User) GetUsername() string {
+	return u.Username
+}
+
+func NewUser(id int, username string, password string) *User {
+	return &User{Id: id, Username: username, Password: password}
+}
+
+type Users []*User
+
+func Connect() *sql.DB {
+	db, err := sql.Open("mysql", getUri())
+
 	if err != nil {
 		panic(err)
 	}
 
-	return client
+	_, err = db.Exec(
+		"CREATE TABLE IF NOT EXISTS User ( id_user int NOT NULL AUTO_INCREMENT, username varchar(255) NOT NULL, password varchar(255) NOT NULL,PRIMARY KEY (id_user));",
+	)
+
+	if err != nil {
+		panic("Line 38 " + err.Error())
+	}
+
+	_, err = db.Exec(
+		"CREATE TABLE IF NOT EXISTS Event (id_event int NOT NULL AUTO_INCREMENT, id_user int NOT NULL, name varchar(255) NOT NULL, time varchar(255), PRIMARY KEY (id_event), FOREIGN KEY (id_user) REFERENCES User(id_user));",
+	)
+
+	if err != nil {
+		panic("Line 46 " + err.Error())
+	}
+
+	return db
 }
 
-func Disconnect(client *mongo.Client) {
-	if err := client.Disconnect(context.TODO()); err != nil {
+func Disconnect(db *sql.DB) {
+	if err := db.Close(); err != nil {
 		panic(err)
 	}
 }
 
-func InsertOne(obj User, client *mongo.Client) error {
-	coll := client.Database("simple_app").Collection("user")
+// func InsertOne(obj User, db *sql.DB) error {
 
-	result, err := coll.InsertOne(context.TODO(), bson.D{
-		{Key: "id", Value: obj.id},
-		{Key: "Username", Value: obj.username},
-		{Key: "Password", Value: obj.password},
-	})
-
-	if err == nil {
-		fmt.Println("Inserted document with _id: %v\n", result)
-	}
-	return err
-}
+// }
 
 func (u *User) FromJSON(r io.Reader) error {
 	e := json.NewDecoder(r)
 	return e.Decode(u)
 }
 
-func (u *User) ToJSON(w io.Writer) error {
+func (u *Users) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(u)
 }
 
-func IsUser(obj User, client *mongo.Client) bool {
-	coll := client.Database("simple_app").Collection("user")
-	ctx := context.Background()
+// func IsUser(obj User, db *sql.DB) bool {
+// 	coll := client.Database("simple_app").Collection("user")
+// 	ctx := context.Background()
 
-	filter := bson.M{"Username": obj.username}
+// 	filter := bson.M{"Username": obj.username}
 
-	var user bson.M
-	if err := coll.FindOne(ctx, filter).Decode(&user); err != nil {
-		return false
-	}
+// 	var user bson.M
+// 	if err := coll.FindOne(ctx, filter).Decode(&user); err != nil {
+// 		return false
+// 	}
 
-	if obj.password != user["password"] {
-		return false
-	}
+// 	if obj.password != user["password"] {
+// 		return false
+// 	}
 
-	return true
-}
+// 	return true
+// }
