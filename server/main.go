@@ -27,6 +27,10 @@ func main() {
 	post.HandleFunc("/new-user", users.AddUser)
 	post.Use(users.MiddlewareUserValidation)
 
+	login := sm.Methods(http.MethodPost).Subrouter()
+	login.HandleFunc("/login", users.CheckUser)
+	login.Use(users.MiddlewareUserValidation)
+
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/get-users", users.GetUsers)
 

@@ -73,21 +73,3 @@ func (u *Users) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(u)
 }
-
-// func IsUser(obj User, db *sql.DB) bool {
-// 	coll := client.Database("simple_app").Collection("user")
-// 	ctx := context.Background()
-
-// 	filter := bson.M{"Username": obj.username}
-
-// 	var user bson.M
-// 	if err := coll.FindOne(ctx, filter).Decode(&user); err != nil {
-// 		return false
-// 	}
-
-// 	if obj.password != user["password"] {
-// 		return false
-// 	}
-
-// 	return true
-// }

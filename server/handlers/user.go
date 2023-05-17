@@ -93,3 +93,25 @@ func (u *Users) GetUsers(rw http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func (u *Users) CheckUser(rw http.ResponseWriter, r *http.Request) {
+	u.l.Println("Handle POST LogIn")
+
+	user := r.Context().Value(KeyUser{}).(*database.User)
+	query := fmt.Sprintf("select * from User where username='%s' and password='%s'", user.Username, user.Password)
+
+	result, err := u.db.Query(query)
+
+	if err != nil {
+		panic(err)
+	}
+
+	data := []byte(`{"status": true}`)
+
+	if result.Next() {
+		rw.Write(data)
+	} else {
+		data := []byte(`{"status": false}`)
+		rw.Write(data)
+	}
+}
