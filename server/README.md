@@ -48,3 +48,5 @@ with the data:
     "password" <string>
 }
 ```
+
+Response is `{"status": true}` if the user with this username and password exists, otherwise `{"status: false}`.
