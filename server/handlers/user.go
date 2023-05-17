@@ -23,8 +23,22 @@ func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 	u.l.Println("Handle POST User")
 
 	user := r.Context().Value(KeyUser{}).(*database.User)
-	query := fmt.Sprintf("Insert into User values(%d, '%s', '%s');", user.Id, user.Username, user.Password)
-	_, err := u.db.Query(query)
+	query := fmt.Sprintf("select * from User where username='%s'", user.Username)
+
+	result, err := u.db.Query(query)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if result.Next() == true {
+		http.Error(rw, "Username is already taken.", http.StatusBadRequest)
+		return
+	}
+
+	query = fmt.Sprintf("Insert into User values(%d, '%s', '%s');", user.Id, user.Username, user.Password)
+	//should consider several queries in the same time (probably should add mutex)
+	_, err = u.db.Query(query)
 
 	if err != nil {
 		panic(err)
