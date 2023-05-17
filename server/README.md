@@ -1,7 +1,7 @@
 # Server
 
 ## External sources
-We use [gorilla web toolkit](https://www.gorillatoolkit.org/).
+We use [gorilla web toolkit](https://www.gorillatoolkit.org/) and [mysql](https://www.mysql.com/).
 
 ## Starting the server
 
