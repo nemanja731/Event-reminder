@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	log.Println("Server started.")
 	db := database.Connect()
 	defer database.Disconnect(db)
 
@@ -24,6 +25,7 @@ func main() {
 
 	post := sm.Methods(http.MethodPost).Subrouter()
 	post.HandleFunc("/new-user", users.AddUser)
+	post.Use(users.MiddlewareUserValidation)
 
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/get-users", users.GetUsers)

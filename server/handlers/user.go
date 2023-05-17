@@ -22,12 +22,13 @@ func NewUsers(l *log.Logger, db *sql.DB) *Users {
 func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 	u.l.Println("Handle POST User")
 
-	// user := r.Context().Value(KeyUser{}).(database.User)
+	user := r.Context().Value(KeyUser{}).(*database.User)
+	query := fmt.Sprintf("Insert into User values(%d, '%s', '%s');", user.Id, user.Username, user.Password)
+	_, err := u.db.Query(query)
 
-	// err := database.InsertOne(user, u.db)
-	// if err != nil {
-	// 	u.l.Println(err)
-	// }
+	if err != nil {
+		panic(err)
+	}
 }
 
 type KeyUser struct{}
@@ -50,7 +51,7 @@ func (u Users) MiddlewareUserValidation(next http.Handler) http.Handler {
 }
 
 func (u *Users) GetUsers(rw http.ResponseWriter, r *http.Request) {
-	u.l.Println("GET request")
+	u.l.Println("Handle GET users")
 
 	result, err := u.db.Query("SELECT * FROM USER")
 
@@ -64,20 +65,14 @@ func (u *Users) GetUsers(rw http.ResponseWriter, r *http.Request) {
 		var username string
 		var password string
 
-		// The result object provided Scan  method
-		// to read row data, Scan returns error,
-		// if any. Here we read id and name returned.
 		err = result.Scan(&id, &username, &password)
 		user := database.NewUser(id, username, password)
 		results = append(results, user)
-		// handle error
+
 		if err != nil {
 			panic(err)
 		}
-
-		fmt.Printf("Id: %d Name: %s\n", user.GetId(), user.GetUsername())
 	}
-	fmt.Println(results)
 	err = results.ToJSON(rw)
 
 	if err != nil {
