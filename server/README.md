@@ -36,3 +36,15 @@ GET request can be done on link:
 ```
 localhost:9090/get-users
 ```
+
+POST request for LogIn:
+```
+localhost:9090/login
+```
+with the data:
+```
+{
+    "username": <string>,
+    "password" <string>
+}
+```
