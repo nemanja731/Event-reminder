@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import axios from "../api/axios";
+import Axios from "axios";
 
-const LOGIN_URL = "/auth";
+const URL = "http://localhost:9090";
+const URLgetUsers = URL + "/get-users";
+const URLaddUser = URL + "/new-user";
 
 function Login({ onFormSwitch }) {
   const [email, setEmail] = useState("");
@@ -9,20 +11,16 @@ function Login({ onFormSwitch }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email, password }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      console.log(JSON.stringify(response?.data));
-      console.log(JSON.stringify(response));
-      setEmail("");
-      setPassword("");
-    } catch (err) {}
+    Axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => console.log("Response", response))
+      .catch((error) => console.log("Error", error));
+
+    // axios
+    //   .post(URLaddUser, JSON.stringify(data), {
+    //     headers: { Authorization: token },
+    //   })
+    //   .then((res) => console.log(res))
+    //   .catch((err) => console.log(err));
   };
 
   return (
