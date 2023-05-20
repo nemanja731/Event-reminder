@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mmacura9/event-reminder/database"
 	"github.com/mmacura9/event-reminder/handlers"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -34,9 +35,11 @@ func main() {
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/get-users", users.GetUsers)
 
+	handler := cors.Default().Handler(sm)
+
 	server := &http.Server{
 		Addr:         ":9090",
-		Handler:      sm,
+		Handler:      handler,
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
