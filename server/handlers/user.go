@@ -21,6 +21,7 @@ func NewUsers(l *log.Logger, db *sql.DB) *Users {
 
 func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 	u.l.Println("Handle POST User")
+	data := []byte(`{"status": true}`)
 
 	user := r.Context().Value(KeyUser{}).(*database.User)
 	query := fmt.Sprintf("select * from User where username='%s'", user.Username)
@@ -28,11 +29,16 @@ func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 	result, err := u.db.Query(query)
 
 	if err != nil {
-		panic(err)
+		u.l.Println(err)
+		data = []byte(`{"status": false}`)
+		rw.Write(data)
+		return
 	}
 
 	if result.Next() == true {
 		http.Error(rw, "Username is already taken.", http.StatusBadRequest)
+		data = []byte(`{"status": false}`)
+		rw.Write(data)
 		return
 	}
 
@@ -41,8 +47,11 @@ func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 	_, err = u.db.Query(query)
 
 	if err != nil {
-		panic(err)
+		u.l.Println(err)
+		data = []byte(`{"status": false}`)
 	}
+
+	rw.Write(data)
 }
 
 type KeyUser struct{}
