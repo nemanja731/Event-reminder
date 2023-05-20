@@ -3,15 +3,15 @@ import Axios from "axios";
 
 const URL = "http://localhost:9090";
 const URLgetUsers = URL + "/get-users";
-const URLaddUser = URL + "/new-user";
+const URLcheckUser = URL + "/login";
 
 function Login({ onFormSwitch }) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.get("https://jsonplaceholder.typicode.com/posts")
+    Axios.get(URLgetUsers)
       .then((response) => console.log("Response", response))
       .catch((error) => console.log("Error", error));
 
@@ -27,14 +27,14 @@ function Login({ onFormSwitch }) {
     <div className="auth-form-container">
       <h2>Login</h2>
       <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="username">Username</label>
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="email@gmail.com"
-          id="email"
-          name="email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          type="username"
+          placeholder="username"
+          id="username"
+          name="username"
         ></input>
         <label htmlFor="password">Password</label>
         <input

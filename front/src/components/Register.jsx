@@ -1,13 +1,24 @@
 import React, { useState } from "react";
+import Axios from "axios";
+
+const URL = "http://localhost:9090";
+const URLaddUser = URL + "/new-user";
 
 function Register({ onFormSwitch }) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [fullName, setfullName] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
+    const userData = {
+      fullName: fullName,
+      username: username,
+      password: password,
+    };
+    Axios.post(URLaddUser, userData).then((response) => {
+      console.log(response.status, response.data);
+    });
   };
 
   return (
@@ -16,21 +27,21 @@ function Register({ onFormSwitch }) {
       <form className="register-form" onSubmit={handleSubmit}>
         <label htmlFor="name">Full Name</label>
         <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={fullName}
+          onChange={(e) => setfullName(e.target.value)}
           type="name"
           placeholder="full name"
           id="name"
-          name="name"
+          nme="name"
         ></input>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="username">Username</label>
         <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="email@gmail.com"
-          id="email"
-          name="email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          type="username"
+          placeholder="username"
+          id="username"
+          name="username"
         ></input>
         <label htmlFor="password">Password</label>
         <input
