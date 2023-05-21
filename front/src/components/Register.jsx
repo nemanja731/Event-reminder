@@ -11,7 +11,7 @@ const URL = "http://localhost:9090";
 const URLgetUsers = URL + "/get-users";
 const URLaddUser = URL + "/new-user";
 
-const fullNameRegex = /^[a-zA-Z][a-zA-Z]{2,23}$/;
+const fullNameRegex = /^[a-zA-Z][a-zA-Z\s]{2,23}$/;
 const usernameRegex = /^[a-zA-Z][a-zA-Z0-9]{2,23}$/;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,24}$/;
@@ -129,8 +129,10 @@ function Register({ onFormSwitch }) {
     <>
       {success ? (
         <section>
-          <h1>Success!</h1>
+          <h1>Success</h1>
           <p>
+            You have successfully logged in!
+            <br />
             <a href="#">Sign In</a>
           </p>
         </section>
@@ -329,7 +331,7 @@ function Register({ onFormSwitch }) {
             <br />
             <span className="line">
               {/*put router link here*/}
-              <a href="#">Sign In</a>
+              <a href="localhost:5173/login">Sign In</a>
             </span>
           </p>
         </div>

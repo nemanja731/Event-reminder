@@ -51,7 +51,7 @@ function Login({ onFormSwitch }) {
         console.log(response?.data);
         console.log(response?.accessToken);
         console.log(JSON.stringify(response));
-        if (response.status == true) {
+        if (response.status == 200) {
           setUsername("");
           setPassword("");
           setEmptyUsername(false);
@@ -73,7 +73,9 @@ function Login({ onFormSwitch }) {
         <section>
           <h1>Success!</h1>
           <p>
-            <a href="#">Sign In</a>
+            You have successfully logged in!
+            <br />
+            <a href="#"></a>
           </p>
         </section>
       ) : (
@@ -157,6 +159,15 @@ function Login({ onFormSwitch }) {
           <button className="link-btn" onClick={() => onFormSwitch("register")}>
             Don't have an account?<br></br>Register here.
           </button>
+
+          <p>
+            Don't have an account?
+            <br />
+            <span className="line">
+              {/*put router link here*/}
+              <a href="localhost:5173/register">Sign Up</a>
+            </span>
+          </p>
         </div>
       )}
     </>
