@@ -85,7 +85,6 @@ button {
   border-radius: 0.5rem;
   background: none;
   color: #fff;
-  padding: 0.25rem;
   position: relative;
   bottom: -10px;
 }
@@ -125,18 +124,20 @@ button {
   display: inline-block;
 }
 
-a:link {
+nav a {
   color: white;
 }
 
-a:visited {
+.navlink {
   color: white;
+  transition-duration: 0.15s;
+  margin-top: 0px;
 }
 
-a:hover {
-  color: rgb(228, 228, 228);
+.navlink:hover {
+  color: rgb(230, 230, 230);
 }
 
-a:active {
-  color: white;
+.sign-paragraph {
+  margin: 0px;
 }

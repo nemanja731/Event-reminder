@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Axios from "axios";
+import { NavLink } from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -16,7 +17,7 @@ const usernameRegex = /^[a-zA-Z][a-zA-Z0-9]{2,23}$/;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,24}$/;
 
-function Register({ onFormSwitch }) {
+function Register() {
   const userRef = useRef();
   const errorRef = useRef();
 
@@ -40,10 +41,6 @@ function Register({ onFormSwitch }) {
   const [submitFail, setSubmitFail] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-
-  useEffect(() => {
-    userRef.current.focus();
-  }, []);
 
   useEffect(() => {
     setErrorMessage("");
@@ -130,10 +127,11 @@ function Register({ onFormSwitch }) {
       {success ? (
         <section>
           <h1>Success</h1>
-          <p>
-            You have successfully logged in!
-            <br />
-            <a href="#">Sign In</a>
+          <p className="sign-paragraph">
+            You have successfully logged in! <br />
+            <NavLink className="navlink" to="/login">
+              Sign In
+            </NavLink>
           </p>
         </section>
       ) : (
@@ -148,7 +146,7 @@ function Register({ onFormSwitch }) {
           <h2>Register</h2>
           <form className="register-form" onSubmit={handleSubmit}>
             <label htmlFor="fullName">
-              Full Name
+              Full Name:
               <FontAwesomeIcon
                 icon={faCheck}
                 className={fullNameValid ? "valid" : "hide"}
@@ -186,7 +184,7 @@ function Register({ onFormSwitch }) {
             </p>
 
             <label htmlFor="username">
-              Username
+              Username:
               <FontAwesomeIcon
                 icon={faCheck}
                 className={usernameValid ? "valid" : "hide"}
@@ -323,17 +321,10 @@ function Register({ onFormSwitch }) {
               Please fill in the fields correctly.
             </p>
           </form>
-          <button className="link-btn" onClick={() => onFormSwitch("login")}>
-            Already have an account?<br></br>Login here.
-          </button>
-          <p>
-            Already registered?
-            <br />
-            <span className="line">
-              {/*put router link here*/}
-              <a href="localhost:5173/login">Sign In</a>
-            </span>
-          </p>
+          <p className="sign-paragraph">Already have an account?</p>
+          <NavLink className="navlink" to="/login">
+            Sign In
+          </NavLink>
         </div>
       )}
     </>
