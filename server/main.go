@@ -8,10 +8,11 @@ import (
 	"os/signal"
 	"time"
 
+	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
 	"github.com/mmacura9/event-reminder/database"
 	"github.com/mmacura9/event-reminder/handlers"
-	"github.com/rs/cors"
 )
 
 func main() {
@@ -35,11 +36,11 @@ func main() {
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/get-users", users.GetUsers)
 
-	handler := cors.Default().Handler(sm)
+	handler := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"http://localhost:5173"}))
 
 	server := &http.Server{
 		Addr:         ":9090",
-		Handler:      handler,
+		Handler:      handler(sm),
 		IdleTimeout:  120 * time.Second,
 		ReadTimeout:  1 * time.Second,
 		WriteTimeout: 1 * time.Second,
