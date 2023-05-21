@@ -126,7 +126,7 @@ function Register() {
     <>
       {success ? (
         <section>
-          <h1>Success</h1>
+          <h1>Success!</h1>
           <p className="sign-paragraph">
             You have successfully registered! <br />
             <NavLink className="navlink" to="/login">
