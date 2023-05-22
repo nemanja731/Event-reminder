@@ -5,7 +5,7 @@ Write it down once and NEVER forget it.
 
 ## About
 
-<img align='center' alt = 'Automation' width = '400' src = 'https://cliply.co/wp-content/uploads/2019/08/371908390_CALENDAR_400px.gif'>
+<img align='center' alt = 'Automation' src = 'https://cliply.co/wp-content/uploads/2019/08/371908390_CALENDAR_400px.gif'>
 
 The application is divided into frontend and backend part. In order for the application to work, three servers are started:
 
