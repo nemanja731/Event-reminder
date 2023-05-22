@@ -65,7 +65,7 @@ function Login() {
           setWrongUsername(false);
           setWrongPassword(false);
           setSuccess(true);
-          navigate(username);
+          navigate({ username });
         } else {
           setWrongUsername(true);
           setWrongPassword(true);
