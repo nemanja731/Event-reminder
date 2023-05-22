@@ -42,7 +42,7 @@ func (u *Users) AddUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query = fmt.Sprintf("Insert into User values(%d, '%s', '%s');", user.Id, user.Username, user.Password)
+	query = fmt.Sprintf("Insert into User values(%d, '%s','%s', '%s');", user.Id, user.FullName, user.Username, user.Password)
 	//should consider several queries in the same time (probably should add mutex)
 	_, err = u.db.Query(query)
 
@@ -85,11 +85,12 @@ func (u *Users) GetUsers(rw http.ResponseWriter, r *http.Request) {
 	for result.Next() {
 
 		var id int
+		var fullName string
 		var username string
 		var password string
 
-		err = result.Scan(&id, &username, &password)
-		user := database.NewUser(id, username, password)
+		err = result.Scan(&id, &fullName, &username, &password)
+		user := database.NewUser(id, fullName, username, password)
 		results = append(results, user)
 
 		if err != nil {

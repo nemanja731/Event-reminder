@@ -23,6 +23,7 @@ func main() {
 	l := log.New(os.Stdout, "event-api", log.LstdFlags)
 
 	users := handlers.NewUsers(l, db)
+	events := handlers.NewEvents(l, db)
 	sm := mux.NewRouter()
 
 	post := sm.Methods(http.MethodPost).Subrouter()
@@ -35,6 +36,9 @@ func main() {
 
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/get-users", users.GetUsers)
+
+	userLogedIn := sm.Methods(http.MethodGet).Subrouter()
+	userLogedIn.HandleFunc("/{username:[A-Za-z0-9]+", events.GetEvents)
 
 	handler := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"http://localhost:5173"}))
 
