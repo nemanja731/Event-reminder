@@ -20,5 +20,6 @@ All code related to the frontend is located in the [front](/front/) folder.
 
 ## Backend
 
-The backend is made with the programming language **Go**. Communication with the database is done through the backend. <br />
-All code related to the backend is located in the [server](/server/) folder.
+The backend is made with the programming language **Go**.<br />
+All code related to the backend is located in the [server](/server/) folder. 
+Communication with the database is done through the backend.
