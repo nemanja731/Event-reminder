@@ -1,11 +1,11 @@
 # Event reminder
 
-Do not forget important events! &nbsp; &nbsp; :alarm_clock: <br />
+Do not forget important events!<br />
 Write it down once and NEVER forget it.
 
-## About
+<img align='center' alt = 'Automation' width = '300' src = 'https://assets.website-files.com/5daaade3e3e3f04da71daa8e/62905b592241713298ec0337_Event%20reminder%20Compress.gif'>
 
-<img align='center' alt = 'Automation' src = 'https://assets.website-files.com/5daaade3e3e3f04da71daa8e/62905b592241713298ec0337_Event%20reminder%20Compress.gif'>
+## About
 
 The application is divided into frontend and backend part. In order for the application to work, three servers are started:
 
