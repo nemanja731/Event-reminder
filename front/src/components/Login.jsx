@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import { NavLink } from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -10,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const URL = "http://localhost:9090";
 const URLcheckUser = URL + "/login";
 
-function Login({ onFormSwitch }) {
+function Login() {
   const [username, setUsername] = useState("");
   const [emptyUsername, setEmptyUsername] = useState(false);
   const [wrongUsername, setWrongUsername] = useState(false);
@@ -24,10 +25,12 @@ function Login({ onFormSwitch }) {
   useEffect(() => {
     setEmptyUsername(false);
     setWrongUsername(false);
+    setWrongPassword(false);
   }, [username]);
 
   useEffect(() => {
     setEmptyPassword(false);
+    setWrongUsername(false);
     setWrongPassword(false);
   }, [password]);
 
@@ -47,11 +50,12 @@ function Login({ onFormSwitch }) {
     };
     Axios.post(URLcheckUser, userData)
       .then((response) => {
-        console.log(response.status, response.data);
-        console.log(response?.data);
-        console.log(response?.accessToken);
-        console.log(JSON.stringify(response));
-        if (response.status == true) {
+        console.log(response.data);
+        // console.log(response.status, response.data);
+        // console.log(response?.data);
+        // console.log(response?.accessToken);
+        // console.log(JSON.stringify(response));
+        if (response.status == 200 && response.data.status === true) {
           setUsername("");
           setPassword("");
           setEmptyUsername(false);
@@ -73,7 +77,9 @@ function Login({ onFormSwitch }) {
         <section>
           <h1>Success!</h1>
           <p>
-            <a href="#">Sign In</a>
+            You have successfully logged in!
+            <br />
+            <a href="#"></a>
           </p>
         </section>
       ) : (
@@ -81,7 +87,7 @@ function Login({ onFormSwitch }) {
           <h2>Login</h2>
           <form className="login-form" onSubmit={handleSubmit}>
             <label htmlFor="username">
-              Username
+              Username:
               <FontAwesomeIcon
                 icon={faCheck}
                 className={
@@ -92,7 +98,7 @@ function Login({ onFormSwitch }) {
               />
               <FontAwesomeIcon
                 icon={faTimes}
-                className={emptyUsername || wrongUsername ? "invalid" : "hide"}
+                className={wrongUsername ? "invalid" : "hide"}
               />
             </label>
             <input
@@ -104,7 +110,7 @@ function Login({ onFormSwitch }) {
               name="username"
             ></input>
             <label htmlFor="password">
-              Password
+              Password:
               <FontAwesomeIcon
                 icon={faCheck}
                 className={
@@ -115,7 +121,7 @@ function Login({ onFormSwitch }) {
               />
               <FontAwesomeIcon
                 icon={faTimes}
-                className={emptyPassword || wrongPassword ? "invalid" : "hide"}
+                className={wrongPassword ? "invalid" : "hide"}
               />
             </label>
             <input
@@ -153,10 +159,10 @@ function Login({ onFormSwitch }) {
               You didn't fill password.
             </p>
           </form>
-
-          <button className="link-btn" onClick={() => onFormSwitch("register")}>
-            Don't have an account?<br></br>Register here.
-          </button>
+          <p className="sign-paragraph">Don't have an account?</p>
+          <NavLink className="navlink" to="/register">
+            Sign Up
+          </NavLink>
         </div>
       )}
     </>
