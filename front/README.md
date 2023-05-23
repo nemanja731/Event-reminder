@@ -43,7 +43,7 @@ Then just run the command
 npm run dev
 ```
 
-The site is hosted on port **5731**.
+The site is hosted on port **5173**.
 
 ## In addition
 
