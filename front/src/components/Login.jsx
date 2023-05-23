@@ -22,7 +22,7 @@ function Login() {
 
   const [success, setSuccess] = useState(false);
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setEmptyUsername(false);
@@ -59,14 +59,14 @@ function Login() {
         // console.log(JSON.stringify(response));
         console.log(response.status, response.data);
         if (response.status == 200 && response.data.status === true) {
-          setUsername("");
-          setPassword("");
           setEmptyUsername(false);
           setEmptyPassword(false);
           setWrongUsername(false);
           setWrongPassword(false);
           setSuccess(true);
-          //navigate({ username });
+          navigate("/" + username);
+          setUsername("");
+          setPassword("");
         } else {
           setWrongUsername(true);
           setWrongPassword(true);
@@ -103,7 +103,7 @@ function Login() {
           name="username"
         ></input>
         <label htmlFor="password">
-          Password::
+          Password:
           <FontAwesomeIcon
             icon={faCheck}
             className={

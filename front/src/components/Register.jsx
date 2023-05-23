@@ -15,7 +15,7 @@ const URLaddUser = URL + "/new-user";
 const fullNameRegex = /^[a-zA-Z][a-zA-Z\s]{2,23}$/;
 const usernameRegex = /^[a-zA-Z][a-zA-Z0-9]{2,23}$/;
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,24}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
 function Register() {
   const userRef = useRef();
@@ -322,7 +322,7 @@ function Register() {
             </p>
           </form>
           <p className="sign-paragraph">Already have an account?</p>
-          <NavLink className="navlink" to="/login">
+          <NavLink className="navlink" to="/">
             Sign In
           </NavLink>
         </div>
