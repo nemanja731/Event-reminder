@@ -3,10 +3,12 @@ package handlers
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/mmacura9/event-reminder/database"
 )
 
@@ -21,8 +23,10 @@ func NewEvents(l *log.Logger, db *sql.DB) *Events {
 
 func (event *Events) GetEvents(rw http.ResponseWriter, r *http.Request) {
 	event.l.Println("Handle GET events")
+	username := mux.Vars(r)["username"]
 
-	result, err := event.db.Query("SELECT name, date FROM Event join user where user.id_user=event.id_user")
+	query := fmt.Sprintf("SELECT name, date FROM Event join user where user.id_user=event.id_user and user.username='%s'", username)
+	result, err := event.db.Query(query)
 
 	if err != nil {
 		panic(err)
