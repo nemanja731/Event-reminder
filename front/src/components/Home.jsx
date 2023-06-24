@@ -71,7 +71,7 @@ function Home() {
 
   return (
     <div className="auth-form-container">
-      <h2>Login</h2>
+      <h2>Home</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input

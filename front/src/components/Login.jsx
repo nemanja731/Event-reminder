@@ -64,7 +64,7 @@ function Login() {
           setWrongUsername(false);
           setWrongPassword(false);
           setSuccess(true);
-          navigate("/" + username);
+          navigate("/home");
           setUsername("");
           setPassword("");
         } else {
