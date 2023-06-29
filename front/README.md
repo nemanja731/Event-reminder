@@ -7,6 +7,8 @@ We use :
 - [react-router-dom](https://reactrouter.com/en/main/)
 - [axios](https://axios-http.com/)
 - [bootstrap](https://getbootstrap.com/)
+- [font-awesome](https://fontawesome.com/)
+- [MUI](https://mui.com/)
 
 ## Install requirements
 Firstly, install all basic dependencies:
