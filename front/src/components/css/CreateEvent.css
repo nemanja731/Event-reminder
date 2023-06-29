@@ -1,0 +1,42 @@
+
+.div-card {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .div-card-body {
+    width: 400px;
+    height: 365px;
+    border-radius: 30px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 2px 3px 5px 5px #282828;
+    position: relative;
+  }
+  
+  .div-card h1 {
+    color: white;
+    margin-bottom: 25px;
+  }
+  
+  .title-event {
+    margin-bottom: 50px;
+    padding-top: 20px;
+  }
+  
+  .picker {
+    position: absolute;
+    top: 0px;
+    left: 85px;
+  }
+  
+  .add-event {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+  }
+  
+  .delete-event {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }

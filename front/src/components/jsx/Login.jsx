@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
+import {
+  faCheck,
+  faTimes,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../css/LoginRegister.css";
 
 const URL = "http://localhost:9090";
-const URLcheckUser = URL + "/home";
+const URLcheckUser = URL + "/login";
 
-function Home() {
+function Login() {
   const [username, setUsername] = useState("");
   const [emptyUsername, setEmptyUsername] = useState(false);
   const [wrongUsername, setWrongUsername] = useState(false);
@@ -58,7 +65,7 @@ function Home() {
           setWrongUsername(false);
           setWrongPassword(false);
           setSuccess(true);
-          navigate("/" + username);
+          navigate("/home");
           setUsername("");
           setPassword("");
         } else {
@@ -71,9 +78,23 @@ function Home() {
 
   return (
     <div className="auth-form-container">
-      <h2>Home</h2>
+      <h2>Login</h2>
       <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">
+          Username:
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={
+              username !== "" && !emptyUsername && !wrongUsername
+                ? "valid"
+                : "hide"
+            }
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={wrongUsername ? "invalid" : "hide"}
+          />
+        </label>
         <input
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -82,7 +103,21 @@ function Home() {
           id="username"
           name="username"
         ></input>
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password">
+          Password:
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={
+              password !== "" && !emptyPassword && !wrongPassword
+                ? "valid"
+                : "hide"
+            }
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={wrongPassword ? "invalid" : "hide"}
+          />
+        </label>
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -100,18 +135,21 @@ function Home() {
             wrongUsername && wrongPassword ? "instructions" : "offscreen"
           }
         >
+          <FontAwesomeIcon icon={faInfoCircle} />
           Wrong username or password.
         </p>
         <p
           id="confirmnote"
           className={emptyUsername ? "instructions" : "offscreen"}
         >
+          <FontAwesomeIcon icon={faInfoCircle} />
           You didn't fill username.
         </p>
         <p
           id="confirmnote"
           className={emptyPassword ? "instructions" : "offscreen"}
         >
+          <FontAwesomeIcon icon={faInfoCircle} />
           You didn't fill password.
         </p>
       </form>
@@ -123,4 +161,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Login;

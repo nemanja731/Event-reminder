@@ -1,0 +1,28 @@
+.div-calendar {
+    float: right;
+    margin-left: 50px;
+  }
+  
+  .css-4pax7l-MuiPickersLayout-root {
+    border-radius: 30px;
+    box-shadow: 2px 3px 5px 5px #282828;
+    width: 350px;
+    height: 438px;
+    margin: 0px;
+  }
+  
+  .css-1eurbeq-MuiPickersToolbar-root-MuiDatePickerToolbar-root {
+    background-color: rgb(160, 67, 196);
+  }
+  
+  .css-3jvy96-MuiTypography-root-MuiDatePickerToolbar-title {
+    color: white;
+  }
+  
+  .div-calendar .css-hlj6pa-MuiDialogActions-root {
+    display: none !important;
+  }
+  
+  .css-1hbyad5-MuiTypography-root {
+    display: none !important;
+  }

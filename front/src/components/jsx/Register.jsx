@@ -7,6 +7,7 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../css/LoginRegister.css";
 
 const URL = "http://localhost:9090";
 const URLgetUsers = URL + "/get-users";
