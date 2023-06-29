@@ -9,6 +9,10 @@ We use :
 - [bootstrap](https://getbootstrap.com/)
 
 ## Install requirements
+Firstly, install all basic dependencies:
+```bash
+npm i
+```
 
 To use rooting, you need to install the package with the following command in the terminal:
 
@@ -29,6 +33,25 @@ npm i react-bootstrap bootstrap
 
 ```
 
+To use MUI library, you have to install few packages:
+```bash
+npm install date-fns
+```
+```bash
+npm install dayjs
+```
+```bash
+npm install @mui/x-date-pickers
+```
+```bash
+npm install @mui/material @emotion/react @emotion/styled
+```
+```bash
+npm install @mui/icons-material
+```
+```bash
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+```
 ## Starting the website
 
 To open the web page, you firstly need to open the folder front inside your terminal:
