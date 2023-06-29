@@ -1,60 +1,56 @@
 
 .div-list {
-    border-radius: 30px;
-    float: left;
-  }
-  
-  .div-list-header {
-    margin-bottom: 26px;
-    position: relative;
-  }
-  
-  .div-list-header h1 {
-    color: white;
-  }
-  
-  .new-event {
-    position: absolute;
-    top: 0px;
-    right: 50px;
-    float: left;
-  }
-  
-  .css-hjn5p8-MuiList-root {
-    border-radius: 30px;
-    box-shadow: 2px 3px 5px 5px #282828;
-    width: 350px;
-    height: 365px;
-    margin: 0px;
-  }
-  
-  .arrow-button {
-    transition-duration: 0.15s;
-  }
-  
-  .arrow-button:hover {
-    opacity: 0.7;
-  }
-  
-  .buttons {
-    display: flex;
-    padding-top: 10px;
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-  
-  .left-button {
-    flex: 1;
-  }
-  
-  .right-button {
-    flex: 1;
-  }
-  
-  .div-list-item {
-    transition-duration: 0.15s;
-  }
-  
-  .div-list-item:hover {
-    opacity: 0.7
-  }
+border-radius: 30px;
+float: left;
+}
+
+.div-list-header {
+margin-bottom: 26px;
+position: relative;
+}
+
+.div-list-header h1 {
+color: white;
+}
+
+.new-event {
+position: absolute;
+top: 0px;
+right: 50px;
+float: left;
+}
+
+.css-hjn5p8-MuiList-root {
+border-radius: 30px;
+box-shadow: 2px 3px 5px 5px #282828;
+width: 350px;
+height: 365px;
+margin: 0px;
+}
+
+.css-10hburv-MuiTypography-root {
+color: black;
+}
+
+.arrow-button {
+transition-duration: 0.15s;
+}
+
+.arrow-button:hover {
+opacity: 0.7;
+}
+
+.buttons {
+display: flex;
+padding-top: 10px;
+padding-left: 40px;
+padding-right: 40px;
+}
+
+.left-button {
+flex: 1;
+}
+
+.right-button {
+flex: 1;
+}
