@@ -3,3 +3,8 @@
     top: 70px;
     left: 550px;
 }
+
+.home-body {
+    display: flex;
+    padding-top: 120px;
+}

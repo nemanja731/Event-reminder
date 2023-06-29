@@ -1,4 +1,4 @@
-import EventCard from "./EventCard";
+import EventCard from "./CreateEvent";
 import ListEvents from "./ListEvents";
 import Calendar from "./Calendar";
 import Countdown from "./Countdown";
@@ -9,15 +9,11 @@ import "../css/Home.css";
 function Home() {
   const [showList, setShowList] = useState(true);
   const [showCard, setShowCard] = useState(false);
-  const [eventTitle, setEventTitle] = useState(false);
+  const [eventTitle, setEventTitle] = useState("Ucenje");
   const [showAlert, setShowAlert] = useState(false);
-  const [showNumAlarms, setShowNumAlarms] = useState(0);
+  const [showNumAlarms, setShowNumAlarms] = useState(1);
 
-  const dateTime = "29/06/2023 04:36";
-
-  const setTitle = (newAlert) => {
-    setEventTitle(newAlert);
-  };
+  const dateTime = "29/06/2023 05:51";
 
   const setAlert = (newAlert) => {
     setShowAlert(newAlert);
@@ -58,12 +54,30 @@ function Home() {
 
   return (
     <>
-      <Countdown
-        title={eventTitle}
-        setAlert={setAlert}
-        dateTime={dateTime}
-        showNumAlarms={showNumAlarms}
-      />
+      <div className="home-body">
+        <Countdown
+          title={eventTitle}
+          setAlert={setAlert}
+          dateTime={dateTime}
+          showNumAlarms={showNumAlarms}
+        />
+        {showList && (
+          <ListEvents
+            changeStates={changeStates}
+            list={list}
+            setList={setList}
+            title={eventTitle}
+          />
+        )}
+        {showCard && (
+          <EventCard
+            changeStates={changeStates}
+            list={list}
+            setList={setList}
+          />
+        )}
+        <Calendar />
+      </div>
       {showAlert && showNumAlarms > 0 && (
         <Alert
           className="div-alert"
@@ -74,18 +88,6 @@ function Home() {
           Event "{eventTitle}" has appeared — check it out!
         </Alert>
       )}
-      {showList && (
-        <ListEvents
-          changeStates={changeStates}
-          list={list}
-          setList={setList}
-          setTitle={setTitle}
-        />
-      )}
-      {showCard && (
-        <EventCard changeStates={changeStates} list={list} setList={setList} />
-      )}
-      <Calendar />
     </>
   );
 }

@@ -22,24 +22,28 @@
     height: 75px;
     width: 350px;
     border-bottom: solid;
+    border-color: black;
   }
   
   .countdown-header h1 {
     padding-top: 10px;
+    color: black;
   }
   
   .countdown-body {
     margin-top: 90px;
   }
-  
-  .countdown-body h3 {
-    margin-bottom: 15px;
+
+  .countdown-body h2 {margin-bottom: 15px;
+    color: black;
   }
   
   .countdown-values {
     display: flex;
     border-style: solid;
     border-radius: 10px;
+    border-color: black;
+    color:black;
   }
   
   .big-text {
@@ -47,6 +51,7 @@
     font-size: 2.5rem;
     line-height: 1;
     margin-bottom: 0;
+    color:black;
   }
   
   .countdown-value {

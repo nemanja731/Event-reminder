@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from "react";
-import Event from "./Event";
+import EventItem from "./EventItem";
 import List from "@mui/material/List";
 import EditIcon from "@mui/icons-material/Edit";
 import Fab from "@mui/material/Fab";
@@ -39,7 +39,6 @@ export default function ListEvents(props) {
         <div className="div-list">
           <div className="div-list-header">
             <h1>Events</h1>
-            {props.setTitle("Ucenje")}
             <div className="new-event">
               <Fab
                 color="secondary"
@@ -59,10 +58,9 @@ export default function ListEvents(props) {
               padding: 0,
               bgcolor: "background.paper",
             }}
-            className="list-items"
           >
             {props.list.map((item) => (
-              <Event
+              <EventItem
                 sx={{ padding: 100 }}
                 key={item.id}
                 id={item.id}

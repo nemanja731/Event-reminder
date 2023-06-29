@@ -10,6 +10,14 @@
     height: 438px;
     margin: 0px;
   }
+
+  .css-dplwbx-MuiPickersCalendarHeader-label {
+    color: black;
+  }
+
+  .css-xazc1j-MuiPickersYear-root {
+    color: black;
+  }
   
   .css-1eurbeq-MuiPickersToolbar-root-MuiDatePickerToolbar-root {
     background-color: rgb(160, 67, 196);

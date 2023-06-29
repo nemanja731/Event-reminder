@@ -7,12 +7,14 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
+import "../css/EventItem.css";
 
 const EventItem = ({ id, title, date, deleteItem }) => {
   const deleteThisItem = () => deleteItem(id);
   return (
     <div>
       <ListItem
+        className="list-item"
         secondaryAction={
           <IconButton edge="end" aria-label="delete" onClick={deleteThisItem}>
             <DeleteIcon />
@@ -31,4 +33,4 @@ const EventItem = ({ id, title, date, deleteItem }) => {
   );
 };
 
-export default Event;
+export default EventItem;
