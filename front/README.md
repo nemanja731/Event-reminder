@@ -30,7 +30,9 @@ To use the styled objects, it is necessary to install the package with the follo
 
 ```bash
 npm i react-bootstrap bootstrap
-
+```
+```bash
+npm i font-awesome
 ```
 
 To use MUI library, you have to install few packages:
