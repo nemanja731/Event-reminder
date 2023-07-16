@@ -12,7 +12,7 @@ import (
 )
 
 const createEvent = `-- name: CreateEvent :execresult
-INSERT INTO Event (id_user, title, event_time)
+INSERT INTO event (id_user, title, event_time)
 VALUES (?, ?, ?)
 `
 
@@ -27,7 +27,7 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (sql.R
 }
 
 const deleteEvent = `-- name: DeleteEvent :exec
-DELETE FROM Event
+DELETE FROM event
 WHERE id = ?
 `
 
@@ -38,7 +38,7 @@ func (q *Queries) DeleteEvent(ctx context.Context, id int64) error {
 
 const getEvent = `-- name: GetEvent :one
 SELECT id, id_user, title, event_time
-FROM Event
+FROM event
 WHERE id = ? LIMIT 1
 `
 
@@ -54,9 +54,27 @@ func (q *Queries) GetEvent(ctx context.Context, id int64) (Event, error) {
 	return i, err
 }
 
+const getEventForUpdate = `-- name: GetEventForUpdate :one
+SELECT id, id_user, title, event_time
+FROM event
+WHERE id = ? LIMIT 1 FOR UPDATE
+`
+
+func (q *Queries) GetEventForUpdate(ctx context.Context, id int64) (Event, error) {
+	row := q.db.QueryRowContext(ctx, getEventForUpdate, id)
+	var i Event
+	err := row.Scan(
+		&i.ID,
+		&i.IDUser,
+		&i.Title,
+		&i.EventTime,
+	)
+	return i, err
+}
+
 const listEvent = `-- name: ListEvent :many
 SELECT id, id_user, title, event_time
-FROM Event
+FROM event
 ORDER BY id
 `
 
@@ -86,4 +104,21 @@ func (q *Queries) ListEvent(ctx context.Context) ([]Event, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateEvent = `-- name: UpdateEvent :exec
+UPDATE event
+SET title=?, event_time = ?
+WHERE id = ?
+`
+
+type UpdateEventParams struct {
+	Title     string    `json:"title"`
+	EventTime time.Time `json:"event_time"`
+	ID        int64     `json:"id"`
+}
+
+func (q *Queries) UpdateEvent(ctx context.Context, arg UpdateEventParams) error {
+	_, err := q.db.ExecContext(ctx, updateEvent, arg.Title, arg.EventTime, arg.ID)
+	return err
 }

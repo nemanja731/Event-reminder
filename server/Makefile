@@ -19,4 +19,7 @@ sqlcinit:
 sqlcgenerate:
 	docker run --rm -v "$(pwd):/src" -w /src kjconroy/sqlc generate
 
-.PHONY: mysql createdb dropdb migrateup migratedown sqlcinit sqlcgenerate
+test:
+	go test -v -cover ./...
+
+.PHONY: mysql createdb dropdb migrateup migratedown sqlcinit sqlcgenerate test
