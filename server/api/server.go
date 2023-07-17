@@ -23,7 +23,7 @@ func NewServer(store *db.Store) *Server {
 	return server
 }
 
-func errorResponce(err error) gin.H {
+func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }
 

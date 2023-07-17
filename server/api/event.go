@@ -17,7 +17,7 @@ type AddEventRequest struct {
 func (server *Server) addEvent(ctx *gin.Context) {
 	var req AddEventRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponce(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
@@ -34,7 +34,7 @@ func (server *Server) addEvent(ctx *gin.Context) {
 	res, err := server.store.CreateEvent(ctx, arg)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponce(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
@@ -48,7 +48,7 @@ type getEventRequest struct {
 func (server *Server) getEvents(ctx *gin.Context) {
 	var req getEventRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponce(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
@@ -61,7 +61,7 @@ func (server *Server) getEvents(ctx *gin.Context) {
 	events, err := server.store.GetEventsFromUser(ctx, arg)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponce(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
