@@ -27,11 +27,11 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Res
 
 const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM user
-WHERE id = ?
+WHERE username = ?
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, id)
+func (q *Queries) DeleteUser(ctx context.Context, username string) error {
+	_, err := q.db.ExecContext(ctx, deleteUser, username)
 	return err
 }
 
@@ -108,14 +108,14 @@ func (q *Queries) ListUser(ctx context.Context) ([]User, error) {
 const updateUser = `-- name: UpdateUser :exec
 UPDATE user 
 SET username=?, fullname = ?, password=?
-WHERE id = ?
+WHERE username = ?
 `
 
 type UpdateUserParams struct {
-	Username string `json:"username"`
-	Fullname string `json:"fullname"`
-	Password string `json:"password"`
-	ID       int64  `json:"id"`
+	Username   string `json:"username"`
+	Fullname   string `json:"fullname"`
+	Password   string `json:"password"`
+	Username_2 string `json:"username_2"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
@@ -123,7 +123,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 		arg.Username,
 		arg.Fullname,
 		arg.Password,
-		arg.ID,
+		arg.Username_2,
 	)
 	return err
 }

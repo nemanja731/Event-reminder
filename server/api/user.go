@@ -1,15 +1,15 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
+	"github.com/nemanja731/Event-reminder-web/server/db/util"
 )
 
 type AddUserRequst struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username" binding:"required,alphanum"`
 	Fullname string `json:"fullname" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -21,9 +21,16 @@ func (server *Server) addUser(ctx *gin.Context) {
 		return
 	}
 
+	hashedPassword, err := util.HashPassword(req.Password)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponce(err))
+		return
+	}
+
 	arg := db.CreateUserParams{
 		Username: req.Username,
-		Password: req.Password,
+		Password: hashedPassword,
 		Fullname: req.Fullname,
 	}
 
@@ -55,8 +62,10 @@ func (server *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	if usr.Password != req.Password {
-		ctx.JSON(http.StatusBadRequest, errorResponce(errors.New("Wrong password")))
+	err = util.CheckPassword(req.Password, usr.Password)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponce(err))
 		return
 	}
 

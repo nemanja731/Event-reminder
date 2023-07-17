@@ -72,6 +72,62 @@ func (q *Queries) GetEventForUpdate(ctx context.Context, id int64) (Event, error
 	return i, err
 }
 
+const getEventsFromUser = `-- name: GetEventsFromUser :many
+SELECT event.id, id_user, title, event_time, user.id, username, fullname, password
+FROM event, user
+WHERE event.id_user = user.id AND user.username = ?
+LIMIT ?, ?
+`
+
+type GetEventsFromUserParams struct {
+	Username string `json:"username"`
+	Offset   int32  `json:"offset"`
+	Limit    int32  `json:"limit"`
+}
+
+type GetEventsFromUserRow struct {
+	ID        int64     `json:"id"`
+	IDUser    int64     `json:"id_user"`
+	Title     string    `json:"title"`
+	EventTime time.Time `json:"event_time"`
+	ID_2      int64     `json:"id_2"`
+	Username  string    `json:"username"`
+	Fullname  string    `json:"fullname"`
+	Password  string    `json:"password"`
+}
+
+func (q *Queries) GetEventsFromUser(ctx context.Context, arg GetEventsFromUserParams) ([]GetEventsFromUserRow, error) {
+	rows, err := q.db.QueryContext(ctx, getEventsFromUser, arg.Username, arg.Offset, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetEventsFromUserRow
+	for rows.Next() {
+		var i GetEventsFromUserRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.IDUser,
+			&i.Title,
+			&i.EventTime,
+			&i.ID_2,
+			&i.Username,
+			&i.Fullname,
+			&i.Password,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listEvent = `-- name: ListEvent :many
 SELECT id, id_user, title, event_time
 FROM event

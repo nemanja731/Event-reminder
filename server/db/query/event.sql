@@ -12,6 +12,12 @@ SELECT *
 FROM event
 WHERE id = ? LIMIT 1 FOR UPDATE;
 
+-- name: GetEventsFromUser :many
+SELECT *
+FROM event, user
+WHERE event.id_user = user.id AND user.username = ?
+LIMIT ?, ?;
+
 -- name: UpdateEvent :exec
 UPDATE event
 SET title=?, event_time = ?
