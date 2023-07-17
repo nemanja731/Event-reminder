@@ -1,6 +1,8 @@
 -- name: CreateEvent :execresult
 INSERT INTO event (id_user, title, event_time)
-VALUES (?, ?, ?);
+VALUES (
+    (SELECT id FROM user WHERE user.username = ?)
+    , ?, ?);
 
 -- name: GetEvent :one
 SELECT *

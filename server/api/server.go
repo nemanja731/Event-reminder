@@ -17,6 +17,7 @@ func NewServer(store *db.Store) *Server {
 	router.POST("/new-user", server.addUser)
 	router.POST("/login", server.login)
 	router.GET("/events", server.getEvents)
+	router.POST("/add-event", server.addEvent)
 
 	server.router = router
 	return server

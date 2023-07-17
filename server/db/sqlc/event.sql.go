@@ -13,17 +13,19 @@ import (
 
 const createEvent = `-- name: CreateEvent :execresult
 INSERT INTO event (id_user, title, event_time)
-VALUES (?, ?, ?)
+VALUES (
+    (SELECT id FROM user WHERE user.username = ?)
+    , ?, ?)
 `
 
 type CreateEventParams struct {
-	IDUser    int64     `json:"id_user"`
+	Username  string    `json:"username"`
 	Title     string    `json:"title"`
 	EventTime time.Time `json:"event_time"`
 }
 
 func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createEvent, arg.IDUser, arg.Title, arg.EventTime)
+	return q.db.ExecContext(ctx, createEvent, arg.Username, arg.Title, arg.EventTime)
 }
 
 const deleteEvent = `-- name: DeleteEvent :exec

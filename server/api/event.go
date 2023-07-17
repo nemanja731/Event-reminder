@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 
 type AddEventRequest struct {
 	Title     string    `json:"title" binding: "required"`
-	EventTime time.Time `json:"event_time"`
+	EventTime time.Time `json:"event_time" binding: "required"`
 }
 
 func (server *Server) addEvent(ctx *gin.Context) {
@@ -20,10 +21,15 @@ func (server *Server) addEvent(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println(req.EventTime)
+
 	arg := db.CreateEventParams{
+		Username:  "mmacura9",
 		Title:     req.Title,
 		EventTime: req.EventTime,
 	}
+
+	fmt.Println(arg.EventTime)
 
 	res, err := server.store.CreateEvent(ctx, arg)
 
@@ -35,8 +41,8 @@ func (server *Server) addEvent(ctx *gin.Context) {
 }
 
 type getEventRequest struct {
-	Limit  int32 `uri:"limit" binding:"required,min=5,max=10"`
-	Offset int32 `uri:"offset" binding:"required,min=1"`
+	Limit  int32 `form:"limit" binding:"required,max=10"`
+	Offset int32 `form:"offset" binding:"required,min=1"`
 }
 
 func (server *Server) getEvents(ctx *gin.Context) {
@@ -46,7 +52,12 @@ func (server *Server) getEvents(ctx *gin.Context) {
 		return
 	}
 
-	var arg db.GetEventsFromUserParams = db.GetEventsFromUserParams{Username: "mmacura9", Offset: req.Offset, Limit: req.Limit}
+	fmt.Println(req.Limit, req.Offset)
+	arg := db.GetEventsFromUserParams{
+		Username: "mmacura9",
+		Offset:   req.Offset,
+		Limit:    req.Limit,
+	}
 	events, err := server.store.GetEventsFromUser(ctx, arg)
 
 	if err != nil {
