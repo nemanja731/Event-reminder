@@ -1,6 +1,6 @@
 -- name: CreateUser :execresult
-INSERT INTO user (username, fullname, password)
-VALUES (?, ?, ?);
+INSERT INTO user (username, email, fullname, password)
+VALUES (?, ?, ?, ?);
 
 -- name: GetUser :one
 SELECT *
@@ -19,7 +19,7 @@ ORDER BY username;
 
 -- name: UpdateUser :exec
 UPDATE user 
-SET username=?, fullname = ?, password=?
+SET username=?, email=?, fullname = ?, password=?
 WHERE username = ?;
 
 -- name: DeleteUser :exec

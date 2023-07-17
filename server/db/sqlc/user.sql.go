@@ -11,18 +11,24 @@ import (
 )
 
 const createUser = `-- name: CreateUser :execresult
-INSERT INTO user (username, fullname, password)
-VALUES (?, ?, ?)
+INSERT INTO user (username, email, fullname, password)
+VALUES (?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
 	Username string `json:"username"`
+	Email    string `json:"email"`
 	Fullname string `json:"fullname"`
 	Password string `json:"password"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createUser, arg.Username, arg.Fullname, arg.Password)
+	return q.db.ExecContext(ctx, createUser,
+		arg.Username,
+		arg.Email,
+		arg.Fullname,
+		arg.Password,
+	)
 }
 
 const deleteUser = `-- name: DeleteUser :exec
@@ -36,7 +42,7 @@ func (q *Queries) DeleteUser(ctx context.Context, username string) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, fullname, password
+SELECT id, email, username, fullname, password
 FROM user
 WHERE username = ? LIMIT 1
 `
@@ -46,6 +52,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.Email,
 		&i.Username,
 		&i.Fullname,
 		&i.Password,
@@ -54,7 +61,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 }
 
 const getUserForUpdate = `-- name: GetUserForUpdate :one
-SELECT id, username, fullname, password
+SELECT id, email, username, fullname, password
 FROM user
 WHERE username = ? LIMIT 1 FOR UPDATE
 `
@@ -64,6 +71,7 @@ func (q *Queries) GetUserForUpdate(ctx context.Context, username string) (User, 
 	var i User
 	err := row.Scan(
 		&i.ID,
+		&i.Email,
 		&i.Username,
 		&i.Fullname,
 		&i.Password,
@@ -72,7 +80,7 @@ func (q *Queries) GetUserForUpdate(ctx context.Context, username string) (User, 
 }
 
 const listUser = `-- name: ListUser :many
-SELECT id, username, fullname, password
+SELECT id, email, username, fullname, password
 FROM user
 ORDER BY username
 `
@@ -88,6 +96,7 @@ func (q *Queries) ListUser(ctx context.Context) ([]User, error) {
 		var i User
 		if err := rows.Scan(
 			&i.ID,
+			&i.Email,
 			&i.Username,
 			&i.Fullname,
 			&i.Password,
@@ -107,12 +116,13 @@ func (q *Queries) ListUser(ctx context.Context) ([]User, error) {
 
 const updateUser = `-- name: UpdateUser :exec
 UPDATE user 
-SET username=?, fullname = ?, password=?
+SET username=?, email=?, fullname = ?, password=?
 WHERE username = ?
 `
 
 type UpdateUserParams struct {
 	Username   string `json:"username"`
+	Email      string `json:"email"`
 	Fullname   string `json:"fullname"`
 	Password   string `json:"password"`
 	Username_2 string `json:"username_2"`
@@ -121,6 +131,7 @@ type UpdateUserParams struct {
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 	_, err := q.db.ExecContext(ctx, updateUser,
 		arg.Username,
+		arg.Email,
 		arg.Fullname,
 		arg.Password,
 		arg.Username_2,

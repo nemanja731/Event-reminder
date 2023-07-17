@@ -10,6 +10,7 @@ import (
 
 type AddUserRequst struct {
 	Username string `json:"username" binding:"required,alphanum"`
+	Email    string `json:"email" binding:"required,email"`
 	Fullname string `json:"fullname" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -30,6 +31,7 @@ func (server *Server) addUser(ctx *gin.Context) {
 
 	arg := db.CreateUserParams{
 		Username: req.Username,
+		Email:    req.Email,
 		Password: hashedPassword,
 		Fullname: req.Fullname,
 	}

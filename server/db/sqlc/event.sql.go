@@ -75,7 +75,7 @@ func (q *Queries) GetEventForUpdate(ctx context.Context, id int64) (Event, error
 }
 
 const getEventsFromUser = `-- name: GetEventsFromUser :many
-SELECT event.id, id_user, title, event_time, user.id, username, fullname, password
+SELECT event.id, id_user, title, event_time, user.id, email, username, fullname, password
 FROM event, user
 WHERE event.id_user = user.id AND user.username = ?
 LIMIT ?, ?
@@ -93,6 +93,7 @@ type GetEventsFromUserRow struct {
 	Title     string    `json:"title"`
 	EventTime time.Time `json:"event_time"`
 	ID_2      int64     `json:"id_2"`
+	Email     string    `json:"email"`
 	Username  string    `json:"username"`
 	Fullname  string    `json:"fullname"`
 	Password  string    `json:"password"`
@@ -113,6 +114,7 @@ func (q *Queries) GetEventsFromUser(ctx context.Context, arg GetEventsFromUserPa
 			&i.Title,
 			&i.EventTime,
 			&i.ID_2,
+			&i.Email,
 			&i.Username,
 			&i.Fullname,
 			&i.Password,
