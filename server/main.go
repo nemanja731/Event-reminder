@@ -12,7 +12,7 @@ import (
 const (
 	dbDriver      = "mysql"
 	dbSource      = "root:secret@tcp(localhost:3000)/eventReminder?parseTime=true"
-	serverAddress = "0.0.0.0:8080"
+	serverAddress = "0.0.0.0:9090"
 )
 
 func main() {

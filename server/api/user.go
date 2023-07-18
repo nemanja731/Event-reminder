@@ -8,7 +8,7 @@ import (
 	"github.com/nemanja731/Event-reminder-web/server/db/util"
 )
 
-type AddUserRequst struct {
+type AddUserRequest struct {
 	Username string `json:"username" binding:"required,alphanum"`
 	Email    string `json:"email" binding:"required,email"`
 	Fullname string `json:"fullname" binding:"required"`
@@ -16,7 +16,7 @@ type AddUserRequst struct {
 }
 
 func (server *Server) addUser(ctx *gin.Context) {
-	var req AddUserRequst
+	var req AddUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -71,5 +71,5 @@ func (server *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusAccepted, true)
+	ctx.JSON(http.StatusAccepted, gin.H{"status": true})
 }
