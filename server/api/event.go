@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
+	"github.com/nemanja731/Event-reminder-web/server/token"
 )
 
 type AddEventRequest struct {
@@ -23,8 +24,10 @@ func (server *Server) addEvent(ctx *gin.Context) {
 
 	fmt.Println(req.EventTime)
 
+	authPayload := ctx.MustGet(authPayloadKey).(*token.Payload)
+
 	arg := db.CreateEventParams{
-		Username:  "mmacura9",
+		Username:  authPayload.Username,
 		Title:     req.Title,
 		EventTime: req.EventTime,
 	}
@@ -52,9 +55,10 @@ func (server *Server) getEvents(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(req.Limit, req.Offset)
+	authPayload := ctx.MustGet(authPayloadKey).(*token.Payload)
+
 	arg := db.GetEventsFromUserParams{
-		Username: "mmacura9",
+		Username: authPayload.Username,
 		Offset:   req.Offset,
 		Limit:    req.Limit,
 	}

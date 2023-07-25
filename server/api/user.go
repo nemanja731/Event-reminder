@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
@@ -77,7 +76,7 @@ func (server *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := server.tokenMaker.CreateToken(usr.Username, 15*time.Minute)
+	accessToken, err := server.tokenMaker.CreateToken(usr.Username, server.config.AccessTokenDuration)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))

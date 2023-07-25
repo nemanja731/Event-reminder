@@ -6,22 +6,25 @@ import (
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
 	"github.com/nemanja731/Event-reminder-web/server/token"
+	"github.com/nemanja731/Event-reminder-web/server/util"
 )
 
 type Server struct {
 	store      *db.Store
 	tokenMaker token.Maker
 	router     *gin.Engine
+	config     util.Config
 }
 
-func NewServer(store *db.Store) (*Server, error) {
-	tokenMaker, err := token.NewPastoMaker("12345678901234567890123456789012")
+func NewServer(config util.Config, store *db.Store) (*Server, error) {
+	tokenMaker, err := token.NewPastoMaker(config.TokenSymmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
 	}
 	server := &Server{
 		store:      store,
 		tokenMaker: tokenMaker,
+		config:     config,
 	}
 	router := gin.Default()
 

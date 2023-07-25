@@ -43,7 +43,7 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		accessToken := fields[1]
 		payload, err := tokenMaker.VerifyToken(accessToken)
 		if err != nil {
-			err := errors.New("Authorization header is not provided")
+			err := errors.New("Not verified")
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
 			return
 		}
