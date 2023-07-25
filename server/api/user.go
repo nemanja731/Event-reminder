@@ -1,11 +1,13 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
-	"github.com/nemanja731/Event-reminder-web/server/db/util"
+	"github.com/nemanja731/Event-reminder-web/server/util"
 )
 
 type AddUserRequest struct {
@@ -60,6 +62,10 @@ func (server *Server) login(ctx *gin.Context) {
 	usr, err := server.store.GetUser(ctx, req.Username)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
@@ -71,5 +77,12 @@ func (server *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusAccepted, gin.H{"status": true})
+	accessToken, err := server.tokenMaker.CreateToken(usr.Username, 15*time.Minute)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusAccepted, gin.H{"status": true, "token": accessToken})
 }

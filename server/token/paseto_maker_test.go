@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/aead/chacha20poly1305"
-	"github.com/nemanja731/Event-reminder-web/server/db/util"
+	"github.com/nemanja731/Event-reminder-web/server/util"
 	"github.com/stretchr/testify/require"
 )
 

@@ -26,10 +26,37 @@ package token
 // 		return "", err
 // 	}
 
-// 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+// 	jwtToken := jwt.NewWithClaims(
+// 		jwt.SigningMethodHS256,
+// 		jwt.MapClaims{
+// 			"ID":  payload.ID,
+// 			"iss": payload.Username,
+// 			"iat": payload.IssuedAt,
+// 			"exp": payload.ExpiredAt,
+// 		})
+
 // 	return jwtToken.SignedString([]byte(maker.secretKey))
 // }
 
 // func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
+// 	keyFunc := func(token *jwt.Token) (interface{}, error) {
+// 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+// 		if !ok {
+// 			return nil, ErrorInvalidToken
+// 		}
+// 		return []byte(maker.secretKey), nil
+// 	}
 
+// 	jwtToken, err := jwt.ParseWithClaims(token, &jwt.MapClaims{}, keyFunc)
+
+// 	if err != nil {
+// 		return nil, ErrorInvalidToken
+// 	}
+// 	payload, ok := jwtToken.Claims.(jwt.MapClaims)
+
+// 	if !ok {
+// 		return nil, ErrorInvalidToken
+// 	}
+
+// 	return payload, nil
 // }

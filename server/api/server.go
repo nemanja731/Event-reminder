@@ -1,26 +1,43 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
+	"github.com/nemanja731/Event-reminder-web/server/token"
 )
 
 type Server struct {
-	store  *db.Store
-	router *gin.Engine
+	store      *db.Store
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
-func NewServer(store *db.Store) *Server {
-	server := &Server{store: store}
+func NewServer(store *db.Store) (*Server, error) {
+	tokenMaker, err := token.NewPastoMaker("12345678901234567890123456789012")
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
+	}
+	server := &Server{
+		store:      store,
+		tokenMaker: tokenMaker,
+	}
 	router := gin.Default()
+
+	authorized := router.Group("/")
 
 	router.POST("/new-user", server.addUser)
 	router.POST("/login", server.login)
-	router.GET("/events", server.getEvents)
-	router.POST("/add-event", server.addEvent)
+
+	authorized.Use(authMiddleware(server.tokenMaker))
+	{
+		authorized.GET("/events", server.getEvents)
+		authorized.POST("/add-event", server.addEvent)
+	}
 
 	server.router = router
-	return server
+	return server, nil
 }
 
 func errorResponse(err error) gin.H {

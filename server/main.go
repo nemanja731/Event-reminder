@@ -7,24 +7,29 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/nemanja731/Event-reminder-web/server/api"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
-)
-
-const (
-	dbDriver      = "mysql"
-	dbSource      = "root:secret@tcp(localhost:3000)/eventReminder?parseTime=true"
-	serverAddress = "0.0.0.0:9090"
+	"github.com/nemanja731/Event-reminder-web/server/util"
 )
 
 func main() {
-	conn, err := sql.Open(dbDriver, dbSource)
+	config, err := util.LoadConfig("server")
+
+	if err != nil {
+		log.Fatal("cannot load config: ", err)
+	}
+
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to the db: ", err)
 	}
 
 	store := db.NewStore(conn)
-	server := api.NewServer(store)
+	server, err := api.NewServer(store)
 
-	err = server.Start(serverAddress)
+	if err != nil {
+		log.Fatal("cannot start server: ", err)
+	}
+
+	err = server.Start(config.ServerAddress)
 
 	if err != nil {
 		log.Fatal("cannot start server: ", err)
