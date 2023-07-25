@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	db "github.com/nemanja731/Event-reminder-web/server/db/sqlc"
@@ -14,6 +15,12 @@ type AddUserRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Fullname string `json:"fullname" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type userResponse struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Fullname string `json:"fullname"`
 }
 
 func (server *Server) addUser(ctx *gin.Context) {
@@ -37,11 +44,24 @@ func (server *Server) addUser(ctx *gin.Context) {
 		Fullname: req.Fullname,
 	}
 
-	res, err := server.store.CreateUser(ctx, arg)
+	_, err = server.store.CreateUser(ctx, arg)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
+	}
+
+	user, err := server.store.GetUser(ctx, req.Username)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	res := userResponse{
+		Username: user.Username,
+		Fullname: user.Fullname,
+		Email:    user.Email,
 	}
 	ctx.JSON(http.StatusOK, res)
 }
@@ -49,6 +69,15 @@ func (server *Server) addUser(ctx *gin.Context) {
 type getUserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type loginUserResponse struct {
+	SessionId             string       `json:"session_id"`
+	AccessToken           string       `json:"access_token"`
+	AccessTokenExpiresAt  time.Time    `json:"access_token_expires_at"`
+	RefreshToken          string       `json:"refresh_token"`
+	RefreshTokenExpiresAt time.Time    `json:"refresh_token_expires_at"`
+	User                  userResponse `json:"user"`
 }
 
 func (server *Server) login(ctx *gin.Context) {
@@ -76,12 +105,56 @@ func (server *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := server.tokenMaker.CreateToken(usr.Username, server.config.AccessTokenDuration)
+	accessToken, accessPayload, err := server.tokenMaker.CreateToken(usr.Username, server.config.AccessTokenDuration)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusAccepted, gin.H{"status": true, "token": accessToken})
+	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
+		usr.Username,
+		server.config.RefreshTokenDuration,
+	)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	_, err = server.store.CreateSession(ctx, db.CreateSessionParams{
+		ID:           refreshPayload.ID.String(),
+		IDUser:       usr.ID,
+		RefreshToken: refreshToken,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
+		ExpiresAt:    refreshPayload.ExpiredAt,
+	})
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	session, err := server.store.GetSession(ctx, refreshPayload.ID.String())
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	rsp := loginUserResponse{
+		SessionId:             session.ID,
+		AccessToken:           accessToken,
+		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiresAt: refreshPayload.ExpiredAt,
+		User: userResponse{
+			Username: usr.Username,
+			Email:    usr.Email,
+			Fullname: usr.Fullname,
+		},
+	}
+	ctx.JSON(http.StatusAccepted, rsp)
 }
