@@ -38,6 +38,7 @@ func NewServer(config util.Config, store *db.Store) (*Server, error) {
 	{
 		authorized.GET("/events", server.getEvents)
 		authorized.POST("/add-event", server.addEvent)
+		authorized.POST("/delete-event", server.deleteEvent)
 	}
 
 	server.router = router

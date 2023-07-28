@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 )
 
 type Store struct {
@@ -34,20 +33,19 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	return tx.Commit()
 }
 
-func (r *GetEventsFromUserRow) Scan(scanFn func(dest ...interface{}) error) error {
-	fmt.Println("USAO U OVO")
-	var eventTimeStr string
-	err := scanFn(&r.ID, &r.IDUser, &r.Title, &eventTimeStr, &r.ID_2, &r.Username, &r.Fullname, &r.Password)
-	if err != nil {
-		return err
-	}
+// func (r *GetEventsFromUserRow) Scan(scanFn func(dest ...interface{}) error) error {
+// 	var eventTimeStr string
+// 	err := scanFn(&r.ID, &r.IDUser, &r.Title, &eventTimeStr, &r.ID_2, &r.Username, &r.Fullname, &r.Password)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	parsedTime, err := time.Parse(time.RFC3339Nano, eventTimeStr)
-	if err != nil {
-		return err
-	}
+// 	parsedTime, err := time.Parse(time.RFC3339Nano, eventTimeStr)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	r.EventTime = parsedTime
+// 	r.EventTime = parsedTime
 
-	return nil
-}
+// 	return nil
+// }

@@ -38,6 +38,47 @@ func (q *Queries) DeleteEvent(ctx context.Context, id int64) error {
 	return err
 }
 
+const getAllEventsFromUser = `-- name: GetAllEventsFromUser :many
+SELECT event.id, event.id_user, event.title, event.event_time
+FROM event, user
+WHERE event.id_user = user.id AND user.username = ?
+LIMIT ?, ?
+`
+
+type GetAllEventsFromUserParams struct {
+	Username string `json:"username"`
+	Offset   int32  `json:"offset"`
+	Limit    int32  `json:"limit"`
+}
+
+func (q *Queries) GetAllEventsFromUser(ctx context.Context, arg GetAllEventsFromUserParams) ([]Event, error) {
+	rows, err := q.db.QueryContext(ctx, getAllEventsFromUser, arg.Username, arg.Offset, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Event
+	for rows.Next() {
+		var i Event
+		if err := rows.Scan(
+			&i.ID,
+			&i.IDUser,
+			&i.Title,
+			&i.EventTime,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getEvent = `-- name: GetEvent :one
 SELECT id, id_user, title, event_time
 FROM event
@@ -74,62 +115,27 @@ func (q *Queries) GetEventForUpdate(ctx context.Context, id int64) (Event, error
 	return i, err
 }
 
-const getEventsFromUser = `-- name: GetEventsFromUser :many
-SELECT event.id, id_user, title, event_time, user.id, email, username, fullname, password
-FROM event, user
-WHERE event.id_user = user.id AND user.username = ?
-LIMIT ?, ?
+const getSpecificEventFromUser = `-- name: GetSpecificEventFromUser :one
+SELECT id, id_user, title, event_time
+FROM event
+WHERE id = ? AND id_user = ?
 `
 
-type GetEventsFromUserParams struct {
-	Username string `json:"username"`
-	Offset   int32  `json:"offset"`
-	Limit    int32  `json:"limit"`
+type GetSpecificEventFromUserParams struct {
+	ID     int64 `json:"id"`
+	IDUser int64 `json:"id_user"`
 }
 
-type GetEventsFromUserRow struct {
-	ID        int64     `json:"id"`
-	IDUser    int64     `json:"id_user"`
-	Title     string    `json:"title"`
-	EventTime time.Time `json:"event_time"`
-	ID_2      int64     `json:"id_2"`
-	Email     string    `json:"email"`
-	Username  string    `json:"username"`
-	Fullname  string    `json:"fullname"`
-	Password  string    `json:"password"`
-}
-
-func (q *Queries) GetEventsFromUser(ctx context.Context, arg GetEventsFromUserParams) ([]GetEventsFromUserRow, error) {
-	rows, err := q.db.QueryContext(ctx, getEventsFromUser, arg.Username, arg.Offset, arg.Limit)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []GetEventsFromUserRow
-	for rows.Next() {
-		var i GetEventsFromUserRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.IDUser,
-			&i.Title,
-			&i.EventTime,
-			&i.ID_2,
-			&i.Email,
-			&i.Username,
-			&i.Fullname,
-			&i.Password,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetSpecificEventFromUser(ctx context.Context, arg GetSpecificEventFromUserParams) (Event, error) {
+	row := q.db.QueryRowContext(ctx, getSpecificEventFromUser, arg.ID, arg.IDUser)
+	var i Event
+	err := row.Scan(
+		&i.ID,
+		&i.IDUser,
+		&i.Title,
+		&i.EventTime,
+	)
+	return i, err
 }
 
 const listEvent = `-- name: ListEvent :many

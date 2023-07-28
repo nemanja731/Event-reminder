@@ -4,6 +4,11 @@ VALUES (
     (SELECT id FROM user WHERE user.username = ?)
     , ?, ?);
 
+-- name: GetSpecificEventFromUser :one
+SELECT *
+FROM event
+WHERE id = ? AND id_user = ?;
+
 -- name: GetEvent :one
 SELECT *
 FROM event
@@ -14,8 +19,8 @@ SELECT *
 FROM event
 WHERE id = ? LIMIT 1 FOR UPDATE;
 
--- name: GetEventsFromUser :many
-SELECT *
+-- name: GetAllEventsFromUser :many
+SELECT event.*
 FROM event, user
 WHERE event.id_user = user.id AND user.username = ?
 LIMIT ?, ?;

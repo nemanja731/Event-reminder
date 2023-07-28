@@ -57,12 +57,12 @@ func (server *Server) getEvents(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authPayloadKey).(*token.Payload)
 
-	arg := db.GetEventsFromUserParams{
+	arg := db.GetAllEventsFromUserParams{
 		Username: authPayload.Username,
 		Offset:   req.Offset,
 		Limit:    req.Limit,
 	}
-	events, err := server.store.GetEventsFromUser(ctx, arg)
+	events, err := server.store.GetAllEventsFromUser(ctx, arg)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -70,4 +70,50 @@ func (server *Server) getEvents(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusAccepted, events)
+}
+
+type deleteEventRequest struct {
+	ID int64 `json:"id" binding:"required"`
+}
+
+func (server *Server) deleteEvent(ctx *gin.Context) {
+	var req deleteEventRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authPayloadKey).(*token.Payload)
+
+	user, err := server.store.GetUser(ctx, authPayload.Username)
+	fmt.Println(user)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	fmt.Print(req.ID, user.ID)
+
+	arg := db.GetSpecificEventFromUserParams{
+		ID:     req.ID,
+		IDUser: user.ID,
+	}
+
+	event, err := server.store.GetSpecificEventFromUser(ctx, arg)
+	fmt.Println(event)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	err = server.store.DeleteEvent(ctx, event.ID)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusAccepted, gin.H{"status": true})
+
 }
