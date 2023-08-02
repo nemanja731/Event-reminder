@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,10 +12,11 @@ import (
 )
 
 type AddUserRequest struct {
-	Username string `json:"username" binding:"required,alphanum"`
-	Email    string `json:"email" binding:"required,email"`
-	Fullname string `json:"fullname" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username        string `json:"username" binding:"required,alphanum"`
+	Email           string `json:"email" binding:"required,email"`
+	Fullname        string `json:"fullname" binding:"required"`
+	Password        string `json:"password" binding:"required"`
+	ConfirmPassword string `json:"confirm_password" binding:"required"`
 }
 
 type userResponse struct {
@@ -28,6 +30,11 @@ func (server *Server) addUser(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
+	}
+
+	if req.Password != req.ConfirmPassword {
+		err := fmt.Errorf("Different passwords")
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 	}
 
 	hashedPassword, err := util.HashPassword(req.Password)
