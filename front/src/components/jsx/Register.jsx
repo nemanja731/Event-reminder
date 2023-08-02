@@ -93,7 +93,7 @@ function Register() {
     }
     const userData = {
       fullname: fullName,
-      email: "ivan@gmail.com",
+      email: "joca@gmail.com",
       username: username,
       password: password,
       confirm_password: matchPassword,
