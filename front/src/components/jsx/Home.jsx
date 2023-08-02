@@ -1,4 +1,4 @@
-import EventCard from "./CreateEvent";
+import CreateEvent from "./CreateEvent";
 import ListEvents from "./ListEvents";
 import Calendar from "./Calendar";
 import Countdown from "./Countdown";
@@ -70,7 +70,7 @@ function Home() {
           />
         )}
         {showCard && (
-          <EventCard
+          <CreateEvent
             changeStates={changeStates}
             list={list}
             setList={setList}
