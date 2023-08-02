@@ -10,65 +10,67 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import Axios from "axios";
 import "../css/CreateEvent.css";
 
 export default function CreateEvent(props) {
-  const URL = "http://localhost:9090";
-  const URLaddEvent = URL + "/add-event";
-
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
   const addEvent = () => {
-    const userData = {
-      username: username,
-      password: password,
+    const eventData = {
+      title: title,
+      headers: { Authorization: `Bearer ${props.accessToken}` },
     };
 
-    //const axios = require("axios");
-    const token = "my_token";
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    axios
-      .get("/api/users", config)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.error(err));
-
-    Axios.post(URLaddEvent, userData)
+    Axios.post(props.URLcheckUser, eventData)
       .then((response) => {
-        console.log(response.data);
-        // console.log(response.status, response.data);
-        // console.log(response?.data);
-        // console.log(response?.accessToken);
-        // console.log(JSON.stringify(response));
         console.log(response.status, response.data);
-        if (response.status == 200 && response.data.status === true) {
-          setEmptyUsername(false);
-          setEmptyPassword(false);
-          setWrongUsername(false);
-          setWrongPassword(false);
-          setSuccess(true);
-          navigate("/home");
-          setUsername("");
-          setPassword("");
-        } else {
-          setWrongUsername(true);
-          setWrongPassword(true);
+        if (response.status == 202) {
+          //navigate("/home");
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+        Axios.post(props.URLrefresh, props.refreshToken)
+          .then((response) => {
+            console.log(response.status, response.data);
+            if (response.status == 202) {
+              props.settingAccessToken(response.accessToken);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
 
-    props.setList([
-      ...props.list,
-      {
-        id: 6,
-        title: title,
-        date: date,
-        time: time,
-      },
-    ]);
+    // props.setList([
+    //   ...props.list,
+    //   {
+    //     id: 6,
+    //     title: title,
+    //     date: date,
+    //     time: time,
+    //   },
+    // ]);
+    props.settingOffset(0);
+    Axios.get(
+      props.URLgetFiveEvents +
+        "?limit=" +
+        props.limit +
+        "&offset=" +
+        props.offset
+    )
+      .then((response) => {
+        console.log(response.status, response.data);
+        if (response.status == 202) {
+          props.setList(response.newList);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     props.changeStates(false, true);
   };
 

@@ -92,9 +92,11 @@ function Register() {
       return;
     }
     const userData = {
-      fullName: fullName,
+      fullname: fullName,
+      email: "joca@gmail.com",
       username: username,
       password: password,
+      confirm_password: matchPassword,
     };
     Axios.post(URLaddUser, userData)
       .then((response) => {
@@ -110,6 +112,7 @@ function Register() {
         setUsernameAvailable(true);
       })
       .catch((error) => {
+        console.log(error);
         if (!error?.response) {
           setErrorMessage("No Server Response");
         } else if (error.response?.status === 409) {
@@ -126,7 +129,7 @@ function Register() {
   return (
     <>
       {success ? (
-        <section>
+        <div className="success-div">
           <h1>Success!</h1>
           <p className="sign-paragraph">
             You have successfully registered! <br />
@@ -134,7 +137,7 @@ function Register() {
               Sign In
             </NavLink>
           </p>
-        </section>
+        </div>
       ) : (
         <div className="auth-form-container">
           <p
@@ -333,12 +336,3 @@ function Register() {
 }
 
 export default Register;
-
-// Axios.post(URLaddUser, userData).then((response) => {
-//   console.log(response.status, response.data);
-// });
-
-// Axios.get(URLgetUsers)
-//   .then((response) => console.log("Response", response))
-//   .catch((error) => console.log("Error", error));
-// }
