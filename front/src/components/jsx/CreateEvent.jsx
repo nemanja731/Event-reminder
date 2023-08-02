@@ -13,11 +13,53 @@ import AddIcon from "@mui/icons-material/Add";
 import "../css/CreateEvent.css";
 
 export default function CreateEvent(props) {
+  const URL = "http://localhost:9090";
+  const URLaddEvent = URL + "/add-event";
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
   const addEvent = () => {
+    const userData = {
+      username: username,
+      password: password,
+    };
+
+    //const axios = require("axios");
+    const token = "my_token";
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .get("/api/users", config)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.error(err));
+
+    Axios.post(URLaddEvent, userData)
+      .then((response) => {
+        console.log(response.data);
+        // console.log(response.status, response.data);
+        // console.log(response?.data);
+        // console.log(response?.accessToken);
+        // console.log(JSON.stringify(response));
+        console.log(response.status, response.data);
+        if (response.status == 200 && response.data.status === true) {
+          setEmptyUsername(false);
+          setEmptyPassword(false);
+          setWrongUsername(false);
+          setWrongPassword(false);
+          setSuccess(true);
+          navigate("/home");
+          setUsername("");
+          setPassword("");
+        } else {
+          setWrongUsername(true);
+          setWrongPassword(true);
+        }
+      })
+      .catch((error) => {});
+
     props.setList([
       ...props.list,
       {

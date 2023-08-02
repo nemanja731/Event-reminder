@@ -30,6 +30,7 @@ export default function ListEvents(props) {
 
   const deleteItem = () => {
     setOpen(false);
+    authorized.DELETE("/delete-event", server.deleteEvent);
     props.setList(props.list.filter((item) => item.id != deleteId));
   };
 
