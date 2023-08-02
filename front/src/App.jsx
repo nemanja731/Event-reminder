@@ -6,12 +6,23 @@ import Home from "./components/jsx/Home";
 import "./App.css";
 
 function App() {
+  const [accessToken, setAccessToken] = useState(false);
+  const [refreshToken, setRefreshToken] = useState(false);
+  const setTokens = (accessT, refreshT) => {
+    setAccessToken(accessT);
+    setRefreshToken(refreshT);
+  };
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login />}></Route>
+        <Route path="/" element={<Login setTokens={setTokens} />}></Route>
         <Route path="register" element={<Register />}></Route>
-        <Route path="home" element={<Home />}></Route>
+        <Route
+          path="home"
+          element={
+            <Home accessToken={accessToken} refreshToken={refreshToken} />
+          }
+        ></Route>
       </Routes>
     </>
   );

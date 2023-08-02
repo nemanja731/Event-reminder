@@ -13,6 +13,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Axios from "axios";
 import "../css/ListEvents.css";
 
 export default function ListEvents(props) {
@@ -30,8 +31,51 @@ export default function ListEvents(props) {
 
   const deleteItem = () => {
     setOpen(false);
-    authorized.DELETE("/delete-event", server.deleteEvent);
-    props.setList(props.list.filter((item) => item.id != deleteId));
+
+    const eventData = {
+      ID: deleteId,
+      headers: { Authorization: `Bearer ${props.accessToken}` },
+    };
+
+    Axios.delete(props.URLdeleteEvent, eventData)
+      .then((response) => {
+        console.log(response.status, response.data);
+        if (response.status == 202) {
+          //navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        Axios.post(props.URLrefresh, props.refreshToken)
+          .then((response) => {
+            console.log(response.status, response.data);
+            if (response.status == 202) {
+              props.settingAccessToken(response.accessToken);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
+
+    props.settingOffset(0);
+    //props.setList(props.list.filter((item) => item.id != deleteId));
+    Axios.get(
+      props.URLgetFiveEvents +
+        "?limit=" +
+        props.limit +
+        "&offset=" +
+        props.offset
+    )
+      .then((response) => {
+        console.log(response.status, response.data);
+        if (response.status == 202) {
+          props.setList(response.newList);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -79,7 +123,23 @@ export default function ListEvents(props) {
                 size="large"
                 className="arrow-button"
                 onClick={() => {
-                  props.changeStates(false, true);
+                  if (props.offset > 0) props.settingOffset(props.offset - 1);
+                  Axios.get(
+                    props.URLgetFiveEvents +
+                      "?limit=" +
+                      props.limit +
+                      "&offset=" +
+                      props.offset
+                  )
+                    .then((response) => {
+                      console.log(response.status, response.data);
+                      if (response.status == 202) {
+                        props.setList(response.newList);
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
                 }}
               >
                 <ArrowCircleLeftIcon sx={{ fontSize: 65, color: blue[800] }} />
@@ -91,7 +151,25 @@ export default function ListEvents(props) {
                 size="large"
                 className="arrow-button"
                 onClick={() => {
-                  props.changeStates(false, true);
+                  props.settingOffset(props.offset + 1);
+                  Axios.get(
+                    props.URLgetFiveEvents +
+                      "?limit=" +
+                      props.limit +
+                      "&offset=" +
+                      props.offset
+                  )
+                    .then((response) => {
+                      console.log(response.status, response.data);
+                      if (response.status == 202) {
+                        if (response.newList == null)
+                          props.settingOffset(props.offset - 1);
+                        props.setList(response.newList);
+                      }
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
                 }}
               >
                 <ArrowCircleRightIcon sx={{ fontSize: 65, color: blue[800] }} />

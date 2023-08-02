@@ -6,6 +6,10 @@ margin: 0.5rem;
 padding: 1rem;
 }
 
+.success-div {
+  margin: auto;
+}
+
 .auth-form-container  {
 padding: 5rem;
 margin: auto;

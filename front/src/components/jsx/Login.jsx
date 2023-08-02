@@ -12,7 +12,7 @@ import "../css/LoginRegister.css";
 const URL = "http://localhost:9090";
 const URLcheckUser = URL + "/login";
 
-function Login() {
+function Login(props) {
   const [username, setUsername] = useState("");
   const [emptyUsername, setEmptyUsername] = useState(false);
   const [wrongUsername, setWrongUsername] = useState(false);
@@ -53,13 +53,12 @@ function Login() {
     };
     Axios.post(URLcheckUser, userData)
       .then((response) => {
-        console.log(response.data);
-        // console.log(response.status, response.data);
-        // console.log(response?.data);
-        // console.log(response?.accessToken);
-        // console.log(JSON.stringify(response));
         console.log(response.status, response.data);
-        if (response.status == 200 && response.data.status === true) {
+        if (response.status == 202) {
+          props.setTokens(
+            response.data.access_token,
+            response.data.refresh_token
+          );
           setEmptyUsername(false);
           setEmptyPassword(false);
           setWrongUsername(false);
@@ -68,12 +67,13 @@ function Login() {
           navigate("/home");
           setUsername("");
           setPassword("");
-        } else {
-          setWrongUsername(true);
-          setWrongPassword(true);
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+        setWrongUsername(true);
+        setWrongPassword(true);
+      });
   };
 
   return (
