@@ -24,7 +24,26 @@ The backend is made with the programming language **Go**.<br />
 All code related to the backend is located in the [server](/server/) folder. 
 Communication with the database is done through the backend.
 
-## How app works
+## Login and Register
 
-<img align='left' alt = 'LoginPage' width = '300' src = './images/loginPage.png'>
-<img align='left' alt = 'RegisterPage' width = '300' src = './images/registerPage.png'>
+The first page that is launched when starting the application is the Login page. If the user already has an account, he needs to enter his credentials. There is a verification system that checks whether the credentials are entered correctly, or whether such an account already exists in the system. After successful login, the user is sent to the Home screen.
+
+<p align="left">
+  <img src="./images/loginPage.png" width="20%" align="center"/>
+  <img src="./images/wrongLoginPage.png" width="19%" align="center"/>
+</p>
+
+If the user does not have an account, he needs to select the Sign Up option at the bottom of the screen, which will take him to the registration screen. During registration, it is necessary to fill in each field so that it meets the requirements defined for it, otherwise the registration will not be successful. Also, it is necessary that the user with that username does not exist in the database in order to be entered into the system.
+
+<p align="left">
+  <img src="./images/registerPage.png" width="20%" align="center"/>
+  <img src="./images/wrongRegisterPage.png" width="18.2%" align="center"/>
+</p>
+
+If the registration is successful, a specific message with the Sign in option is displayed on the screen to transfer the user to the Login page.
+
+<p align="left">
+  <img src="./images/successPage.png" width="20%" align="center"/>
+</p>
+
+## Home
