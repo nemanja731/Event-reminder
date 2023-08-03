@@ -47,3 +47,19 @@ If the registration is successful, a specific message with the Sign in option is
 </p>
 
 ## Home
+
+Since the user has successfully logged in, the Home screen is in front of him. It is made up of 3 parts:</br>
+- The first part represents a **timer** that ticks and shows how much time is left until the first next event that occurs.
+- The second part presents a **list of events** created by the user. The events are sorted by time so that the most recent events are displayed first.
+- The third part presents a **calendar** with which the user can find his way more easily in order to know when he wants to make an event.
+  
+<p align="left">
+  <img src="./images/homePage.png" width="70%" align="center"/>
+</p>
+
+When the timer ticks, a notification will be displayed that it is time for the event and the timer will start counting down the time for the first next event:
+
+<p align="left">
+  <img src="./images/eventFinished.png" width="70%" align="center"/>
+</p>
+
