@@ -42,7 +42,7 @@ function Home(props) {
     {
       id: 1,
       title: "Učenje",
-      date: "Aug 29, 2023, 17:09h",
+      date: "Jul 29, 2023, 17:09h",
     },
     {
       id: 2,
@@ -77,7 +77,7 @@ function Home(props) {
       console.log(error);
     });
 
-  const dateTime = "29/08/2023 05:51";
+  const dateTime = "29/06/2023 05:51";
   const dateTime2 = list[0].date;
 
   const changeStates = (showCard, showList) => {
