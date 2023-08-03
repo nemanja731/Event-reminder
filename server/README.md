@@ -30,7 +30,7 @@ The server is hosted on port 9090. The APIs created on the server are a concaten
 - /login -> **POST** {username, password}
 - /add-event -> **POST** {title, date, access token}
 - /delete-event -> **DELETE** {id, access token}
-- - /events -> **GET** {access token}
+- /events -> **GET** {access token}
 - /tokens/renew_access -> **GET** {refresh token}
 
 The requests which are used are POST, GET and DELETE. In each of them, in addition to the request data itself, it is necessary to send an access token in order for the request to be authorized. The access token becomes invalid after 15 minutes and when this happens, the api that sends the refresh token is called to generate a new access token. Refresh token lasts 24 hours.
