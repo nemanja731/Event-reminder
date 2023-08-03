@@ -63,3 +63,14 @@ When the timer ticks, a notification will be displayed that it is time for the e
   <img src="./images/eventFinished.png" width="70%" align="center"/>
 </p>
 
+By clicking on the purple cross on which the pencil is drawn, the option to create a new event is launched:
+
+<p align="left">
+  <img src="./images/newEventEmpty.png" width="40%" align="center"/>
+</p>
+
+With the help of a modern widget, the user is able to choose the title and at what time he wants to schedule the event
+
+<p align="left">
+  <img src="./images/newEventPicker.png" width="30%" align="center"/>
+</p>
