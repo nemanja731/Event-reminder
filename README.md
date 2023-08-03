@@ -23,3 +23,7 @@ All code related to the frontend is located in the [front](/front/) folder.
 The backend is made with the programming language **Go**.<br />
 All code related to the backend is located in the [server](/server/) folder. 
 Communication with the database is done through the backend.
+
+## How app works
+
+<img align='center' alt = 'Automation' width = '300' src = './images/loginPage.png'>
