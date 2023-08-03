@@ -26,4 +26,5 @@ Communication with the database is done through the backend.
 
 ## How app works
 
-<img align='center' alt = 'Automation' width = '300' src = './images/loginPage.png'>
+<img align='left' alt = 'LoginPage' width = '300' src = './images/loginPage.png'>
+<img align='left' alt = 'RegisterPage' width = '300' src = './images/registerPage.png'>
