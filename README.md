@@ -9,8 +9,8 @@ Write it down once and **NEVER** forget it.
 
 The application is divided into frontend and backend part. In order for the application to work, three servers are started:
 
-- the server on the frontend
-- the server on the backend
+- the server on the [frontend](/front/)
+- the server on the [backend](/server/)
 - the server for the mysql database
 
 For each user, his credentials and the events he creates are remembered in database. In order to make sure that the user still uses his account after logging in and not someone else, sessions are used, i.e. access and refresh tokens.
